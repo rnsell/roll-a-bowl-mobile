@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { createContext, useContext, useMemo, useRef } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -6,9 +6,22 @@ import {
 } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 
 import { useAuth } from '@/auth';
 import { config } from '@/config';
+
+// Context to share the raw Apollo Client instance outside of Apollo's own hooks
+const ApolloClientContext = createContext<ApolloClient | null>(null);
+
+export function useApolloClientInstance(): ApolloClient {
+  const client = useContext(ApolloClientContext);
+  if (!client) {
+    throw new Error('useApolloClientInstance must be used within GraphQLProvider');
+  }
+  return client;
+}
 
 export function GraphQLProvider({
   children,
@@ -41,11 +54,28 @@ export function GraphQLProvider({
       };
     });
 
+    const errorLink = onError(({ error }) => {
+      if (CombinedGraphQLErrors.is(error)) {
+        const isAuthError = error.errors.some(
+          (e) =>
+            e.extensions?.['code'] === 'UNAUTHENTICATED' ||
+            e.message.toLowerCase().includes('authentication required'),
+        );
+        if (isAuthError) {
+          void signOutRef.current();
+        }
+      }
+    });
+
     return new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: errorLink.concat(authLink).concat(httpLink),
       cache: new InMemoryCache(),
     });
   }, [getToken]);
 
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  return (
+    <ApolloClientContext.Provider value={client}>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
+    </ApolloClientContext.Provider>
+  );
 }

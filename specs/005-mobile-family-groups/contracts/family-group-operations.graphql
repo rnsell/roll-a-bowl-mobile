@@ -1,0 +1,164 @@
+# GraphQL Operations for Mobile Family Groups
+#
+# These operations are consumed by the mobile app from the existing API.
+# They will be processed by @graphql-codegen to generate typed hooks.
+# The API is code-first (NestJS), so this file serves as the mobile contract.
+
+# ─── Bootstrap Queries (used in setup epic) ───────────────────────────
+
+query GetCurrentUserProfile {
+  me {
+    id
+    email
+    firstName
+    lastName
+    status
+  }
+}
+
+query GetMyFamilyGroup {
+  myFamilyGroup {
+    id
+    name
+    slug
+    memberCount
+    createdAt
+    members {
+      id
+      firstName
+      lastName
+      email
+      role
+      createdAt
+    }
+    owner {
+      id
+      firstName
+      lastName
+      email
+      role
+      createdAt
+    }
+  }
+}
+
+# ─── Family Group Management Queries ──────────────────────────────────
+
+query GetFamilyGroupInvitations {
+  familyGroupInvitations {
+    id
+    invitedEmail
+    status
+    expiresAt
+    createdAt
+  }
+}
+
+# ─── Family Recipe Queries ────────────────────────────────────────────
+
+query GetFamilyRecipes {
+  familyRecipes {
+    id
+    name
+    slug
+    instructions
+    sourceUrl
+    contributedByUserId
+    lastModifiedByUserId
+    createdAt
+    updatedAt
+  }
+}
+
+query GetFamilyRecipe($slug: String!) {
+  familyRecipe(slug: $slug) {
+    id
+    name
+    slug
+    instructions
+    sourceUrl
+    contributedByUserId
+    lastModifiedByUserId
+    createdAt
+    updatedAt
+  }
+}
+
+# ─── Family Group Mutations ───────────────────────────────────────────
+
+mutation CreateFamilyGroup($input: CreateFamilyGroupInput!) {
+  createFamilyGroup(input: $input) {
+    id
+    name
+    slug
+    memberCount
+    createdAt
+  }
+}
+
+mutation DeleteFamilyGroup {
+  deleteFamilyGroup
+}
+
+# ─── Invitation Mutations ─────────────────────────────────────────────
+
+mutation InviteFamilyMember($input: InviteFamilyMemberInput!) {
+  inviteFamilyMember(input: $input) {
+    id
+    invitedEmail
+    status
+    expiresAt
+    createdAt
+  }
+}
+
+mutation CancelFamilyInvitation($invitationId: Int!) {
+  cancelFamilyInvitation(invitationId: $invitationId)
+}
+
+# ─── Membership Mutations ─────────────────────────────────────────────
+
+mutation RemoveFamilyMember($memberId: Int!) {
+  removeFamilyMember(memberId: $memberId)
+}
+
+mutation LeaveFamilyGroup {
+  leaveFamilyGroup
+}
+
+# ─── Family Recipe Mutations ──────────────────────────────────────────
+
+mutation ShareRecipeToFamily($input: ShareRecipeToFamilyInput!) {
+  shareRecipeToFamily(input: $input) {
+    id
+    name
+    slug
+    contributedByUserId
+    createdAt
+  }
+}
+
+mutation CreateFamilyRecipe($input: CreateFamilyRecipeInput!) {
+  createFamilyRecipe(input: $input) {
+    id
+    name
+    slug
+    contributedByUserId
+    createdAt
+  }
+}
+
+mutation UpdateFamilyRecipe($input: UpdateFamilyRecipeInput!) {
+  updateFamilyRecipe(input: $input) {
+    id
+    name
+    slug
+    instructions
+    lastModifiedByUserId
+    updatedAt
+  }
+}
+
+mutation DeleteFamilyRecipe($slug: String!) {
+  deleteFamilyRecipe(slug: $slug)
+}

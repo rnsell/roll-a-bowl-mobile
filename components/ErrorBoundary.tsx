@@ -3,6 +3,9 @@ import { Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Box, Heading, Paragraph, Caption } from '@/design-system';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('ErrorBoundary');
 
 interface Props {
   children: React.ReactNode;
@@ -24,8 +27,8 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo): void {
-    console.error('[ErrorBoundary] Something went wrong:', error);
-    console.error('[ErrorBoundary] Component stack:', info.componentStack);
+    logger.error('Something went wrong:', error);
+    logger.error('Component stack:', info.componentStack);
   }
 
   private handleRetry = (): void => {
@@ -36,23 +39,23 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <SafeAreaView style={styles.safe}>
-          <Box flex={1} alignItems="center" justifyContent="center" px={32}>
+          <Box flex={1} alignItems="center" justifyContent="center" px={4}>
             <Heading.Large>Too many cooks</Heading.Large>
-            <Box mt={8}>
+            <Box mt={1}>
               <Paragraph.Regular style={styles.centered}>
                 Looks like something boiled over. We've burned the recipe on this one.
               </Paragraph.Regular>
             </Box>
 
             {this.state.error && (
-              <Box mt={16}>
+              <Box mt={2}>
                 <Caption.Small style={styles.centered}>
                   {this.state.error.message}
                 </Caption.Small>
               </Box>
             )}
 
-            <Box mt={32} width="100%">
+            <Box mt={4} width="100%">
               <Pressable onPress={this.handleRetry} style={styles.button}>
                 <Paragraph.Regular color="#FFFFFF" style={styles.buttonText}>
                   Back to the kitchen
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2F95DC',
+    backgroundColor: '#8B5E3C',
   },
   buttonText: {
     fontWeight: '600',

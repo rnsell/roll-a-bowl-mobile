@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import type { BoxProps, SpacingProps } from './types';
 import { resolveSpacingStyle } from './types';
+import { SPACING_UNIT } from './theme';
 
 function pickSpacingProps(props: BoxProps): SpacingProps {
   return {
@@ -32,10 +33,14 @@ export function Box({
   borderLeftWidth,
   borderRightWidth,
   flex,
+  flexGrow,
+  flexShrink,
   alignItems,
+  alignSelf,
   justifyContent,
   flexWrap,
   gap,
+  overflow,
   width,
   height,
   style,
@@ -57,10 +62,14 @@ export function Box({
         borderLeftWidth !== undefined && { borderLeftWidth },
         borderRightWidth !== undefined && { borderRightWidth },
         flex !== undefined && { flex },
+        flexGrow !== undefined && { flexGrow },
+        flexShrink !== undefined && { flexShrink },
         alignItems !== undefined && { alignItems },
+        alignSelf !== undefined && { alignSelf },
         justifyContent !== undefined && { justifyContent },
         flexWrap !== undefined && { flexWrap },
-        gap !== undefined && { gap },
+        gap !== undefined && { gap: gap * SPACING_UNIT },
+        overflow !== undefined && { overflow },
         width !== undefined && { width },
         height !== undefined && { height },
         style,
