@@ -23,7 +23,7 @@ export function Button({
   const resolvedColor = color ?? colors.primary;
   const isDisabled = disabled || loading;
 
-  const solidTextColor = '#FFFFFF';
+  const solidTextColor = colors.onPrimary;
 
   return (
     <Pressable

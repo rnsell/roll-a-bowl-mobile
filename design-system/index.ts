@@ -1,3 +1,5 @@
+export { Avatar } from './Avatar';
+export type { AvatarProps } from './Avatar';
 export { Box } from './Box';
 export { Row } from './Row';
 export { SafeAreaBox } from './SafeAreaBox';

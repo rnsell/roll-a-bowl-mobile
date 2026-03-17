@@ -49,6 +49,23 @@ export type AddAdHocMealInput = {
   text: Scalars['String']['input'];
 };
 
+export type AddFamilyAdHocMealInput = {
+  /** Date of the meal (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['input'];
+  /** Type of meal (breakfast, lunch, dinner, or snacks) */
+  mealType: Scalars['String']['input'];
+  /** Free-text description of the meal (1-200 characters) */
+  text: Scalars['String']['input'];
+};
+
+export type AddFamilyShoppingListItemInput = {
+  familyShoppingListId: Scalars['Int']['input'];
+  ingredientId?: InputMaybe<Scalars['Int']['input']>;
+  measurementId?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  quantity?: InputMaybe<Scalars['Float']['input']>;
+};
+
 /** Input for adding an ingredient to a recipe */
 export type AddRecipeIngredientInput = {
   /** ID of the ingredient to add */
@@ -65,10 +82,27 @@ export type AddRecipeIngredientInput = {
   recipeId: Scalars['Int']['input'];
 };
 
+export type AddRecipeToFamilyMealPlanInput = {
+  /** Date of the meal (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['input'];
+  /** Type of meal (breakfast, lunch, dinner, or snacks) */
+  mealType: Scalars['String']['input'];
+  /** ID of the recipe to add */
+  recipeId: Scalars['Int']['input'];
+};
+
 export type AddRecipeToMealPlanInput = {
   date: Scalars['String']['input'];
   mealType: Scalars['String']['input'];
   recipeSlug: Scalars['String']['input'];
+};
+
+export type AddShoppingListItemInput = {
+  ingredientId?: InputMaybe<Scalars['Int']['input']>;
+  measurementId?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  quantity?: InputMaybe<Scalars['Float']['input']>;
+  shoppingListId: Scalars['Int']['input'];
 };
 
 /** Recipe detail for admin view (read-only) */
@@ -169,6 +203,37 @@ export type AdminUserSearchResult = {
   users: Array<AdminUser>;
 };
 
+/** Shopping list items grouped by aisle, sorted by aisle sort order */
+export type AisleGroupType = {
+  __typename?: 'AisleGroupType';
+  /** The aisle for this group */
+  aisle: AisleType;
+  /** Whether all items in this group are checked off */
+  allChecked: Scalars['Boolean']['output'];
+  /** Items in this aisle group */
+  items: Array<ShoppingListItemType>;
+};
+
+/** A physical grocery store aisle/section */
+export type AisleType = {
+  __typename?: 'AisleType';
+  /** Unique identifier */
+  id: Scalars['Int']['output'];
+  /** Display name (e.g., "Produce", "Dairy & Eggs") */
+  name: Scalars['String']['output'];
+  /** URL-safe identifier */
+  slug: Scalars['String']['output'];
+  /** Display order in shopping list */
+  sortOrder: Scalars['Int']['output'];
+};
+
+export type ClearFamilyMealSlotInput = {
+  /** Date of the meal slot (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['input'];
+  /** Type of meal (breakfast, lunch, dinner, or snacks) */
+  mealType: Scalars['String']['input'];
+};
+
 export type ClearMealSlotInput = {
   date: Scalars['String']['input'];
   mealType: Scalars['String']['input'];
@@ -210,6 +275,15 @@ export type CreateCustomIngredientInput = {
   name: Scalars['String']['input'];
 };
 
+export type CreateFamilyGroupInput = {
+  name: Scalars['String']['input'];
+};
+
+export type CreateFamilyRecipeInput = {
+  instructions?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 /** Ingredient entry for creating a recipe with ingredients */
 export type CreateRecipeIngredientInput = {
   /** ID of the ingredient to add */
@@ -239,6 +313,151 @@ export type CreateTermsVersionInput = {
   effectiveDate?: InputMaybe<Scalars['String']['input']>;
   /** Version identifier in YYYY-MM-DD format (must be unique) */
   version: Scalars['String']['input'];
+};
+
+/** Family shopping list items grouped by aisle, sorted by aisle sort order */
+export type FamilyAisleGroupType = {
+  __typename?: 'FamilyAisleGroupType';
+  /** The aisle for this group */
+  aisle: AisleType;
+  /** Whether all items in this group are checked off */
+  allChecked: Scalars['Boolean']['output'];
+  /** Items in this aisle group */
+  items: Array<FamilyShoppingListItemType>;
+};
+
+export type FamilyGroupType = {
+  __typename?: 'FamilyGroupType';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  memberCount: Scalars['Int']['output'];
+  members: Array<FamilyMemberType>;
+  name: Scalars['String']['output'];
+  owner: FamilyMemberType;
+  slug: Scalars['String']['output'];
+};
+
+export type FamilyInvitationType = {
+  __typename?: 'FamilyInvitationType';
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  invitedEmail: Scalars['String']['output'];
+  status: InvitationStatus;
+};
+
+/** A meal scheduled on the family meal plan for a specific date and meal type (can be a recipe or ad hoc meal) */
+export type FamilyMealPlanEntryType = {
+  __typename?: 'FamilyMealPlanEntryType';
+  /** Name of the family member who added this entry (e.g. "Jane Smith") */
+  addedBy: Scalars['String']['output'];
+  /** Timestamp when entry was created */
+  createdAt: Scalars['DateTime']['output'];
+  /** Date of the family meal plan entry (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['output'];
+  /** Unique identifier for the family meal plan entry (prefixed: "recipe:123" or "adhoc:456") */
+  id: Scalars['String']['output'];
+  /** The meal data - use __typename to discriminate between RecipeType and AdHocMealType */
+  meal: Meal;
+  /** Type of meal (breakfast, lunch, dinner, or snacks) */
+  mealType: Scalars['String']['output'];
+  /** Timestamp when entry was last updated */
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type FamilyMealPlanInput = {
+  /** Date to query (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['input'];
+};
+
+export type FamilyMealPlanRangeInput = {
+  /** End date (inclusive, ISO 8601 format: YYYY-MM-DD) */
+  endDateInclusive: Scalars['String']['input'];
+  /** Start date (inclusive, ISO 8601 format: YYYY-MM-DD) */
+  startDateInclusive: Scalars['String']['input'];
+};
+
+/** Family meal plan entries grouped by date */
+export type FamilyMealPlanType = {
+  __typename?: 'FamilyMealPlanType';
+  /** Date for this family meal plan (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['output'];
+  /** All family meal plan entries for this date (may be empty if no meals scheduled) */
+  entries: Array<FamilyMealPlanEntryType>;
+};
+
+export type FamilyMemberType = {
+  __typename?: 'FamilyMemberType';
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  lastName: Scalars['String']['output'];
+  role: FamilyRole;
+};
+
+export type FamilyRecipeType = {
+  __typename?: 'FamilyRecipeType';
+  contributedByUserId?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  instructions?: Maybe<Scalars['String']['output']>;
+  lastModifiedByUserId?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  sourceUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Role of a user within a family group */
+export type FamilyRole =
+  | 'MEMBER'
+  | 'OWNER';
+
+/** Source of a family shopping list item */
+export type FamilyShoppingListItemSource =
+  | 'GENERATED'
+  | 'WRITE_IN';
+
+/** An individual item on a family shopping list */
+export type FamilyShoppingListItemType = {
+  __typename?: 'FamilyShoppingListItemType';
+  aisle?: Maybe<AisleType>;
+  /** When the item was checked off (null = unchecked) */
+  checkedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Unique identifier */
+  id: Scalars['Int']['output'];
+  ingredient?: Maybe<IngredientType>;
+  /** Whether the item is currently checked off */
+  isChecked: Scalars['Boolean']['output'];
+  measurement?: Maybe<MeasurementGraphQlType>;
+  /** Display name of the item */
+  name: Scalars['String']['output'];
+  /** Quantity needed */
+  quantity?: Maybe<Scalars['Float']['output']>;
+  /** Sort order within aisle group */
+  sortOrder: Scalars['Int']['output'];
+  /** Whether this item was auto-generated or written in */
+  source: FamilyShoppingListItemSource;
+};
+
+/** A grocery shopping list for a family group date range */
+export type FamilyShoppingListType = {
+  __typename?: 'FamilyShoppingListType';
+  /** Items grouped by grocery store aisle */
+  aisleGroups: Array<FamilyAisleGroupType>;
+  /** When the list was created */
+  createdAt: Scalars['DateTime']['output'];
+  /** End date of the meal plan range (YYYY-MM-DD) */
+  endDate: Scalars['String']['output'];
+  /** Unique identifier */
+  id: Scalars['Int']['output'];
+  /** All items on this shopping list */
+  items: Array<FamilyShoppingListItemType>;
+  /** Start date of the meal plan range (YYYY-MM-DD) */
+  startDate: Scalars['String']['output'];
+  /** When the list was last updated */
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 /** Paginated list of food categories with pagination metadata */
@@ -283,12 +502,39 @@ export type FoodCategoryTypeIngredientsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GenerateFamilyShoppingListInput = {
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
+export type GenerateShoppingListInput = {
+  endDate: Scalars['String']['input'];
+  /** Source meal plan for ingredient aggregation. Defaults to PERSONAL. */
+  source?: InputMaybe<ShoppingListSource>;
+  startDate: Scalars['String']['input'];
+};
+
+export type GetFamilyShoppingListInput = {
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
 /** Optional filters for measurements query */
 export type GetMeasurementsInput = {
   /** If true, only return measurements exposed in UI dropdowns */
   exposedOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by measurement type (volume, weight, count, qualitative) */
   type?: InputMaybe<MeasurementTypeEnum>;
+};
+
+export type GetShoppingListInput = {
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
+export type ImportRecipeUrlInput = {
+  /** The URL to fetch and extract a recipe from. Must be a valid http/https URL. */
+  url: Scalars['String']['input'];
 };
 
 /** Search results for ingredients with matching items and total count */
@@ -313,6 +559,18 @@ export type IngredientType = {
   isSystem: Scalars['Boolean']['output'];
   /** Human-readable name (e.g., all-purpose flour, olive oil) */
   name: Scalars['String']['output'];
+};
+
+/** Status of a family group invitation */
+export type InvitationStatus =
+  | 'ACCEPTED'
+  | 'CANCELLED'
+  | 'DECLINED'
+  | 'EXPIRED'
+  | 'PENDING';
+
+export type InviteFamilyMemberInput = {
+  email: Scalars['String']['input'];
 };
 
 /** A meal in the meal plan - either a Recipe or an Ad Hoc Meal */
@@ -393,43 +651,94 @@ export type MeasurementTypeEnum =
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptFamilyInvitation: FamilyGroupType;
   /** Accept the current terms version. Creates an immutable acceptance record. */
   acceptTerms: TermsAcceptanceType;
   /** Add an ad hoc meal (free-text) to a specific meal slot. Multiple ad hoc meals can be added to the same slot. */
   addAdHocMeal: MealPlanEntryType;
+  /** Add an ad hoc meal (free-text) to a specific family meal slot. Multiple ad hoc meals can be added to the same slot. */
+  addFamilyAdHocMeal: FamilyMealPlanEntryType;
+  /** Add a write-in item to a family shopping list. */
+  addFamilyShoppingListItem: FamilyShoppingListItemType;
   addRecipeIngredient: RecipeIngredientType;
+  /** Add a recipe to a specific family meal slot. Returns error if recipe already scheduled in that slot. */
+  addRecipeToFamilyMealPlan: FamilyMealPlanEntryType;
   /** Add a recipe to a specific meal slot. Returns error if recipe already scheduled in that slot. */
   addRecipeToMealPlan: MealPlanEntryType;
+  /** Add a write-in item to a shopping list. */
+  addShoppingListItem: ShoppingListItemType;
   /** Create a new terms version. */
   adminCreateTermsVersion: AdminTermsVersion;
   /** Delete a terms version. Only allowed if version has no user acceptances. */
   adminDeleteTermsVersion: Scalars['Boolean']['output'];
   /** Update an existing terms version. Only allowed if version has no user acceptances. */
   adminUpdateTermsVersion: AdminTermsVersion;
+  cancelFamilyInvitation: Scalars['Boolean']['output'];
+  /** Remove all entries (recipes and ad hoc meals) from a specific family meal slot. Returns count of entries removed. */
+  clearFamilyMealSlot: Scalars['Int']['output'];
   /** Remove all recipes from a specific meal slot. Returns count of entries removed. */
   clearMealSlot: Scalars['Int']['output'];
   /** Create a custom ingredient (user-private) */
   createCustomIngredient: IngredientType;
+  createFamilyGroup: FamilyGroupType;
+  createFamilyRecipe: FamilyRecipeType;
   createRecipe: RecipeType;
   /** Create a new terms version (admin). Version must be unique. */
   createTermsVersion: TermsVersion;
+  declineFamilyInvitation: Scalars['Boolean']['output'];
   /** Delete a custom ingredient (user-owned only) */
   deleteCustomIngredient: Scalars['Boolean']['output'];
+  deleteFamilyGroup: Scalars['Boolean']['output'];
+  deleteFamilyRecipe: Scalars['Boolean']['output'];
   deleteRecipe: Scalars['Boolean']['output'];
+  /** Generate a family shopping list from family meal plan entries within a date range. */
+  generateFamilyShoppingList: FamilyShoppingListType;
+  /** Generate a shopping list from meal plan entries within a date range. */
+  generateShoppingList: ShoppingListType;
+  importRecipeFromUrl: RecipeType;
+  inviteFamilyMember: FamilyInvitationType;
+  leaveFamilyGroup: Scalars['Boolean']['output'];
+  /** Regenerate a family shopping list, replacing generated items with current meal plan data. */
+  regenerateFamilyShoppingList: FamilyShoppingListType;
+  /** Regenerate an existing shopping list, resetting all items. */
+  regenerateShoppingList: ShoppingListType;
   /** Remove an ad hoc meal from the meal plan. Returns true if removed, false if not found. */
   removeAdHocMeal: Scalars['Boolean']['output'];
+  /** Remove a family ad hoc meal from the meal plan. Returns true if removed, false if not found. */
+  removeFamilyAdHocMeal: Scalars['Boolean']['output'];
+  removeFamilyMember: Scalars['Boolean']['output'];
+  /** Remove an item from the family shopping list. */
+  removeFamilyShoppingListItem: Scalars['Boolean']['output'];
+  /** Remove a specific recipe from a family meal slot. Returns true if removed, false if not found. */
+  removeRecipeFromFamilyMealPlan: Scalars['Boolean']['output'];
   /** Remove a specific recipe from a meal slot. Returns true if removed, false if not found. */
   removeRecipeFromMealPlan: Scalars['Boolean']['output'];
   removeRecipeIngredient: Scalars['Boolean']['output'];
+  /** Remove an item from the shopping list. */
+  removeShoppingListItem: Scalars['Boolean']['output'];
   reorderRecipeIngredients: Array<RecipeIngredientType>;
   /** Revoke access for a connected MCP application */
   revokeConnectedApp: RevokeConnectedAppResult;
+  shareRecipeToFamily: FamilyRecipeType;
+  /** Toggle check state on a family shopping list item. */
+  toggleFamilyShoppingListItem: FamilyShoppingListItemType;
+  toggleRecipeFamilyStatus: RecipeType;
+  /** Toggle check state on a shopping list item. */
+  toggleShoppingListItem: ShoppingListItemType;
   /** Update an ad hoc meal text. Returns the updated meal plan entry. */
   updateAdHocMeal: MealPlanEntryType;
+  /** Update a family ad hoc meal text. Returns the updated family meal plan entry. */
+  updateFamilyAdHocMeal: FamilyMealPlanEntryType;
+  updateFamilyRecipe: FamilyRecipeType;
   updateRecipe: RecipeType;
   updateRecipeIngredient: RecipeIngredientType;
   /** Update an existing terms version (admin). */
   updateTermsVersion: TermsVersion;
+};
+
+
+export type MutationAcceptFamilyInvitationArgs = {
+  invitationId: Scalars['Int']['input'];
 };
 
 
@@ -443,13 +752,33 @@ export type MutationAddAdHocMealArgs = {
 };
 
 
+export type MutationAddFamilyAdHocMealArgs = {
+  input: AddFamilyAdHocMealInput;
+};
+
+
+export type MutationAddFamilyShoppingListItemArgs = {
+  input: AddFamilyShoppingListItemInput;
+};
+
+
 export type MutationAddRecipeIngredientArgs = {
   input: AddRecipeIngredientInput;
 };
 
 
+export type MutationAddRecipeToFamilyMealPlanArgs = {
+  input: AddRecipeToFamilyMealPlanInput;
+};
+
+
 export type MutationAddRecipeToMealPlanArgs = {
   input: AddRecipeToMealPlanInput;
+};
+
+
+export type MutationAddShoppingListItemArgs = {
+  input: AddShoppingListItemInput;
 };
 
 
@@ -469,6 +798,16 @@ export type MutationAdminUpdateTermsVersionArgs = {
 };
 
 
+export type MutationCancelFamilyInvitationArgs = {
+  invitationId: Scalars['Int']['input'];
+};
+
+
+export type MutationClearFamilyMealSlotArgs = {
+  input: ClearFamilyMealSlotInput;
+};
+
+
 export type MutationClearMealSlotArgs = {
   input: ClearMealSlotInput;
 };
@@ -476,6 +815,16 @@ export type MutationClearMealSlotArgs = {
 
 export type MutationCreateCustomIngredientArgs = {
   input: CreateCustomIngredientInput;
+};
+
+
+export type MutationCreateFamilyGroupArgs = {
+  input: CreateFamilyGroupInput;
+};
+
+
+export type MutationCreateFamilyRecipeArgs = {
+  input: CreateFamilyRecipeInput;
 };
 
 
@@ -491,8 +840,18 @@ export type MutationCreateTermsVersionArgs = {
 };
 
 
+export type MutationDeclineFamilyInvitationArgs = {
+  invitationId: Scalars['Int']['input'];
+};
+
+
 export type MutationDeleteCustomIngredientArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteFamilyRecipeArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -501,8 +860,58 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
+export type MutationGenerateFamilyShoppingListArgs = {
+  input: GenerateFamilyShoppingListInput;
+};
+
+
+export type MutationGenerateShoppingListArgs = {
+  input: GenerateShoppingListInput;
+};
+
+
+export type MutationImportRecipeFromUrlArgs = {
+  input: ImportRecipeUrlInput;
+};
+
+
+export type MutationInviteFamilyMemberArgs = {
+  input: InviteFamilyMemberInput;
+};
+
+
+export type MutationRegenerateFamilyShoppingListArgs = {
+  input: RegenerateFamilyShoppingListInput;
+};
+
+
+export type MutationRegenerateShoppingListArgs = {
+  input: RegenerateShoppingListInput;
+};
+
+
 export type MutationRemoveAdHocMealArgs = {
   input: RemoveAdHocMealInput;
+};
+
+
+export type MutationRemoveFamilyAdHocMealArgs = {
+  input: RemoveFamilyAdHocMealInput;
+};
+
+
+export type MutationRemoveFamilyMemberArgs = {
+  memberId: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveFamilyShoppingListItemArgs = {
+  input: RemoveFamilyShoppingListItemInput;
+};
+
+
+export type MutationRemoveRecipeFromFamilyMealPlanArgs = {
+  input: RemoveRecipeFromFamilyMealPlanInput;
 };
 
 
@@ -516,6 +925,11 @@ export type MutationRemoveRecipeIngredientArgs = {
 };
 
 
+export type MutationRemoveShoppingListItemArgs = {
+  input: RemoveShoppingListItemInput;
+};
+
+
 export type MutationReorderRecipeIngredientsArgs = {
   input: ReorderRecipeIngredientsInput;
 };
@@ -526,8 +940,38 @@ export type MutationRevokeConnectedAppArgs = {
 };
 
 
+export type MutationShareRecipeToFamilyArgs = {
+  input: ShareRecipeToFamilyInput;
+};
+
+
+export type MutationToggleFamilyShoppingListItemArgs = {
+  input: ToggleFamilyShoppingListItemInput;
+};
+
+
+export type MutationToggleRecipeFamilyStatusArgs = {
+  input: ToggleFamilyStatusInput;
+};
+
+
+export type MutationToggleShoppingListItemArgs = {
+  input: ToggleShoppingListItemInput;
+};
+
+
 export type MutationUpdateAdHocMealArgs = {
   input: UpdateAdHocMealInput;
+};
+
+
+export type MutationUpdateFamilyAdHocMealArgs = {
+  input: UpdateFamilyAdHocMealInput;
+};
+
+
+export type MutationUpdateFamilyRecipeArgs = {
+  input: UpdateFamilyRecipeInput;
 };
 
 
@@ -562,6 +1006,8 @@ export type Query = {
   adminTermsVersions: Array<AdminTermsVersion>;
   /** Get user profile with terms acceptance history. Returns null if user not found. */
   adminUserProfile?: Maybe<AdminUserProfile>;
+  /** Get all aisles for the current tenant, ordered by sort order. */
+  aisles: Array<AisleType>;
   /** Get all terms versions (admin). Returns all versions ordered by effective date. */
   allTermsVersions: Array<TermsVersion>;
   /** Check if the current user has access to a specific feature. Returns allowed: true/false. Throws error for unknown features. */
@@ -572,6 +1018,15 @@ export type Query = {
   connectedAppsStats: ConnectedAppsStats;
   /** Get the current terms document. Returns null if no terms configured. */
   currentTerms?: Maybe<TermsDocument>;
+  familyGroupInvitations: Array<FamilyInvitationType>;
+  /** Get all family meal plan entries for a specific date (includes both recipes and ad hoc meals with addedBy attribution) */
+  familyMealPlan: Array<FamilyMealPlanEntryType>;
+  /** Get family meal plan entries for a date range (up to 60 days), grouped by date. Returns all dates in range, including empty days. Includes both recipes and ad hoc meals with addedBy attribution. */
+  familyMealPlanRange: Array<FamilyMealPlanType>;
+  familyRecipe?: Maybe<FamilyRecipeType>;
+  familyRecipes: Array<FamilyRecipeType>;
+  /** Get family shopping list for a date range. Returns null if none exists. */
+  familyShoppingList?: Maybe<FamilyShoppingListType>;
   /** Get paginated list of food categories */
   foodCategories: FoodCategoryConnection;
   /** Get a single food category by slug */
@@ -591,6 +1046,8 @@ export type Query = {
   measurementBySystemId?: Maybe<MeasurementGraphQlType>;
   /** Get all measurement units, optionally filtered */
   measurements: Array<MeasurementGraphQlType>;
+  myFamilyGroup?: Maybe<FamilyGroupType>;
+  myFamilyInvitations: Array<FamilyInvitationType>;
   /** Get the current user's terms acceptance history, most recent first. */
   myTermsAcceptance: Array<TermsAcceptanceType>;
   recipe?: Maybe<RecipeType>;
@@ -598,8 +1055,11 @@ export type Query = {
   recipes: Array<RecipeType>;
   /** Search ingredients by name with optional category filter */
   searchIngredients: IngredientSearchResult;
+  /** Get shopping list for a date range. Returns null if none exists. */
+  shoppingList?: Maybe<ShoppingListType>;
   /** Check if the current user needs to accept terms. Returns acceptance status. */
   termsStatus: TermsStatusType;
+  unifiedRecipes: Array<RecipeType>;
   user?: Maybe<UserProfile>;
 };
 
@@ -633,6 +1093,26 @@ export type QueryCheckAccessArgs = {
 
 export type QueryConnectedAppsArgs = {
   activeOnly?: Scalars['Boolean']['input'];
+};
+
+
+export type QueryFamilyMealPlanArgs = {
+  input: FamilyMealPlanInput;
+};
+
+
+export type QueryFamilyMealPlanRangeArgs = {
+  input: FamilyMealPlanRangeInput;
+};
+
+
+export type QueryFamilyRecipeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+export type QueryFamilyShoppingListArgs = {
+  input: GetFamilyShoppingListInput;
 };
 
 
@@ -696,6 +1176,11 @@ export type QuerySearchIngredientsArgs = {
   input: SearchIngredientsInput;
 };
 
+
+export type QueryShoppingListArgs = {
+  input: GetShoppingListInput;
+};
+
 /** An ingredient within a recipe, including quantity, measurement, and preparation details */
 export type RecipeIngredientType = {
   __typename?: 'RecipeIngredientType';
@@ -717,6 +1202,7 @@ export type RecipeIngredientType = {
 
 export type RecipeType = {
   __typename?: 'RecipeType';
+  contributedByUserId?: Maybe<Scalars['Int']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
   /** Count of ingredients in this recipe */
@@ -724,16 +1210,46 @@ export type RecipeType = {
   /** Ingredients for this recipe in display order */
   ingredients: Array<RecipeIngredientType>;
   instructions?: Maybe<Scalars['String']['output']>;
+  isFamilyRecipe: Scalars['Boolean']['output'];
+  isOwnedByCurrentUser: Scalars['Boolean']['output'];
+  lastModifiedByUserId?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
   slug: Scalars['String']['output'];
+  sourceUrl?: Maybe<Scalars['String']['output']>;
   tenantId: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
   userId: Scalars['Int']['output'];
 };
 
+export type RegenerateFamilyShoppingListInput = {
+  familyShoppingListId: Scalars['Int']['input'];
+};
+
+export type RegenerateShoppingListInput = {
+  shoppingListId: Scalars['Int']['input'];
+};
+
 export type RemoveAdHocMealInput = {
   /** ID of the ad hoc meal to remove */
   adHocMealId: Scalars['Int']['input'];
+};
+
+export type RemoveFamilyAdHocMealInput = {
+  /** ID of the family ad hoc meal to remove */
+  adHocMealId: Scalars['Int']['input'];
+};
+
+export type RemoveFamilyShoppingListItemInput = {
+  itemId: Scalars['Int']['input'];
+};
+
+export type RemoveRecipeFromFamilyMealPlanInput = {
+  /** Date of the meal (ISO 8601 format: YYYY-MM-DD) */
+  date: Scalars['String']['input'];
+  /** Type of meal (breakfast, lunch, dinner, or snacks) */
+  mealType: Scalars['String']['input'];
+  /** ID of the recipe to remove */
+  recipeId: Scalars['Int']['input'];
 };
 
 export type RemoveRecipeFromMealPlanInput = {
@@ -746,6 +1262,10 @@ export type RemoveRecipeFromMealPlanInput = {
 export type RemoveRecipeIngredientInput = {
   /** ID of the recipe ingredient to remove */
   id: Scalars['Int']['input'];
+};
+
+export type RemoveShoppingListItemInput = {
+  itemId: Scalars['Int']['input'];
 };
 
 /** Input for reordering ingredients within a recipe */
@@ -773,6 +1293,61 @@ export type SearchIngredientsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Search query string (minimum 2 characters) */
   query: Scalars['String']['input'];
+};
+
+export type ShareRecipeToFamilyInput = {
+  recipeSlug: Scalars['String']['input'];
+};
+
+/** Source of a shopping list item */
+export type ShoppingListItemSource =
+  | 'GENERATED'
+  | 'WRITE_IN';
+
+/** An individual item on a shopping list */
+export type ShoppingListItemType = {
+  __typename?: 'ShoppingListItemType';
+  aisle?: Maybe<AisleType>;
+  /** When the item was checked off (null = unchecked) */
+  checkedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Unique identifier */
+  id: Scalars['Int']['output'];
+  ingredient?: Maybe<IngredientType>;
+  /** Whether the item is currently checked off */
+  isChecked: Scalars['Boolean']['output'];
+  measurement?: Maybe<MeasurementGraphQlType>;
+  /** Display name of the item */
+  name: Scalars['String']['output'];
+  /** Quantity needed */
+  quantity?: Maybe<Scalars['Float']['output']>;
+  /** Sort order within aisle group */
+  sortOrder: Scalars['Int']['output'];
+  /** Whether this item was auto-generated or written in */
+  source: ShoppingListItemSource;
+};
+
+/** Source meal plan for shopping list generation */
+export type ShoppingListSource =
+  | 'FAMILY'
+  | 'PERSONAL';
+
+/** A grocery shopping list for a date range */
+export type ShoppingListType = {
+  __typename?: 'ShoppingListType';
+  /** Items grouped by grocery store aisle */
+  aisleGroups: Array<AisleGroupType>;
+  /** When the list was created */
+  createdAt: Scalars['DateTime']['output'];
+  /** End date of the meal plan range (YYYY-MM-DD) */
+  endDate: Scalars['String']['output'];
+  /** Unique identifier */
+  id: Scalars['Int']['output'];
+  /** All items on this shopping list */
+  items: Array<ShoppingListItemType>;
+  /** Start date of the meal plan range (YYYY-MM-DD) */
+  startDate: Scalars['String']['output'];
+  /** When the list was last updated */
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 /** Terms acceptance record for user profile */
@@ -834,11 +1409,36 @@ export type TermsVersion = {
   version: Scalars['String']['output'];
 };
 
+export type ToggleFamilyShoppingListItemInput = {
+  itemId: Scalars['Int']['input'];
+};
+
+export type ToggleFamilyStatusInput = {
+  slug: Scalars['String']['input'];
+};
+
+export type ToggleShoppingListItemInput = {
+  itemId: Scalars['Int']['input'];
+};
+
 export type UpdateAdHocMealInput = {
   /** ID of the ad hoc meal to update */
   adHocMealId: Scalars['Int']['input'];
   /** New free-text description of the meal (1-200 characters) */
   text: Scalars['String']['input'];
+};
+
+export type UpdateFamilyAdHocMealInput = {
+  /** ID of the family ad hoc meal to update */
+  adHocMealId: Scalars['Int']['input'];
+  /** New free-text description of the meal (1-200 characters) */
+  text: Scalars['String']['input'];
+};
+
+export type UpdateFamilyRecipeInput = {
+  instructions?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  slug: Scalars['String']['input'];
 };
 
 /** Input for updating a recipe ingredient */
@@ -858,6 +1458,7 @@ export type UpdateRecipeIngredientInput = {
 export type UpdateRecipeInput = {
   instructions?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  sourceUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Input for updating an existing terms version */
@@ -890,6 +1491,89 @@ export type UserStatus =
   | 'INACTIVE'
   | 'SUSPENDED';
 
+export type GetFamilyGroupInvitationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFamilyGroupInvitationsQuery = { __typename?: 'Query', familyGroupInvitations: Array<{ __typename?: 'FamilyInvitationType', id: number, invitedEmail: string, status: InvitationStatus, expiresAt: string, createdAt: string }> };
+
+export type GetFamilyRecipesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFamilyRecipesQuery = { __typename?: 'Query', familyRecipes: Array<{ __typename?: 'FamilyRecipeType', id: number, name: string, slug: string, instructions?: string | null, sourceUrl?: string | null, contributedByUserId?: number | null, lastModifiedByUserId?: number | null, createdAt: string, updatedAt: string }> };
+
+export type GetFamilyRecipeQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetFamilyRecipeQuery = { __typename?: 'Query', familyRecipe?: { __typename?: 'FamilyRecipeType', id: number, name: string, slug: string, instructions?: string | null, sourceUrl?: string | null, contributedByUserId?: number | null, lastModifiedByUserId?: number | null, createdAt: string, updatedAt: string } | null };
+
+export type CreateFamilyGroupMutationVariables = Exact<{
+  input: CreateFamilyGroupInput;
+}>;
+
+
+export type CreateFamilyGroupMutation = { __typename?: 'Mutation', createFamilyGroup: { __typename?: 'FamilyGroupType', id: number, name: string, slug: string, memberCount: number, createdAt: string } };
+
+export type DeleteFamilyGroupMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteFamilyGroupMutation = { __typename?: 'Mutation', deleteFamilyGroup: boolean };
+
+export type InviteFamilyMemberMutationVariables = Exact<{
+  input: InviteFamilyMemberInput;
+}>;
+
+
+export type InviteFamilyMemberMutation = { __typename?: 'Mutation', inviteFamilyMember: { __typename?: 'FamilyInvitationType', id: number, invitedEmail: string, status: InvitationStatus, expiresAt: string, createdAt: string } };
+
+export type CancelFamilyInvitationMutationVariables = Exact<{
+  invitationId: Scalars['Int']['input'];
+}>;
+
+
+export type CancelFamilyInvitationMutation = { __typename?: 'Mutation', cancelFamilyInvitation: boolean };
+
+export type RemoveFamilyMemberMutationVariables = Exact<{
+  memberId: Scalars['Int']['input'];
+}>;
+
+
+export type RemoveFamilyMemberMutation = { __typename?: 'Mutation', removeFamilyMember: boolean };
+
+export type LeaveFamilyGroupMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LeaveFamilyGroupMutation = { __typename?: 'Mutation', leaveFamilyGroup: boolean };
+
+export type ShareRecipeToFamilyMutationVariables = Exact<{
+  input: ShareRecipeToFamilyInput;
+}>;
+
+
+export type ShareRecipeToFamilyMutation = { __typename?: 'Mutation', shareRecipeToFamily: { __typename?: 'FamilyRecipeType', id: number, name: string, slug: string, contributedByUserId?: number | null, createdAt: string } };
+
+export type CreateFamilyRecipeMutationVariables = Exact<{
+  input: CreateFamilyRecipeInput;
+}>;
+
+
+export type CreateFamilyRecipeMutation = { __typename?: 'Mutation', createFamilyRecipe: { __typename?: 'FamilyRecipeType', id: number, name: string, slug: string, contributedByUserId?: number | null, createdAt: string } };
+
+export type UpdateFamilyRecipeMutationVariables = Exact<{
+  input: UpdateFamilyRecipeInput;
+}>;
+
+
+export type UpdateFamilyRecipeMutation = { __typename?: 'Mutation', updateFamilyRecipe: { __typename?: 'FamilyRecipeType', id: number, name: string, slug: string, instructions?: string | null, lastModifiedByUserId?: number | null, updatedAt: string } };
+
+export type DeleteFamilyRecipeMutationVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type DeleteFamilyRecipeMutation = { __typename?: 'Mutation', deleteFamilyRecipe: boolean };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -910,7 +1594,32 @@ export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetRecipesQuery = { __typename?: 'Query', recipes: Array<{ __typename?: 'RecipeType', id: number, name: string, slug: string, ingredientCount: number, createdAt: string, updatedAt: string }> };
 
+export type GetCurrentUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type GetCurrentUserProfileQuery = { __typename?: 'Query', me?: { __typename?: 'UserProfile', id: number, email: string, firstName: string, lastName: string, status: UserStatus } | null };
+
+export type GetMyFamilyGroupQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyFamilyGroupQuery = { __typename?: 'Query', myFamilyGroup?: { __typename?: 'FamilyGroupType', id: number, name: string, slug: string, memberCount: number, createdAt: string, members: Array<{ __typename?: 'FamilyMemberType', id: number, firstName: string, lastName: string, email: string, role: FamilyRole, createdAt: string }>, owner: { __typename?: 'FamilyMemberType', id: number, firstName: string, lastName: string, email: string, role: FamilyRole, createdAt: string } } | null };
+
+
+export const GetFamilyGroupInvitationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFamilyGroupInvitations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"familyGroupInvitations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invitedEmail"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<GetFamilyGroupInvitationsQuery, GetFamilyGroupInvitationsQueryVariables>;
+export const GetFamilyRecipesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFamilyRecipes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"familyRecipes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"instructions"}},{"kind":"Field","name":{"kind":"Name","value":"sourceUrl"}},{"kind":"Field","name":{"kind":"Name","value":"contributedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetFamilyRecipesQuery, GetFamilyRecipesQueryVariables>;
+export const GetFamilyRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFamilyRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"familyRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"instructions"}},{"kind":"Field","name":{"kind":"Name","value":"sourceUrl"}},{"kind":"Field","name":{"kind":"Name","value":"contributedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetFamilyRecipeQuery, GetFamilyRecipeQueryVariables>;
+export const CreateFamilyGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateFamilyGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFamilyGroupInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFamilyGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"memberCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<CreateFamilyGroupMutation, CreateFamilyGroupMutationVariables>;
+export const DeleteFamilyGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteFamilyGroup"}}]}}]} as unknown as DocumentNode<DeleteFamilyGroupMutation, DeleteFamilyGroupMutationVariables>;
+export const InviteFamilyMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InviteFamilyMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"InviteFamilyMemberInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"inviteFamilyMember"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invitedEmail"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<InviteFamilyMemberMutation, InviteFamilyMemberMutationVariables>;
+export const CancelFamilyInvitationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CancelFamilyInvitation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"invitationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cancelFamilyInvitation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"invitationId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"invitationId"}}}]}]}}]} as unknown as DocumentNode<CancelFamilyInvitationMutation, CancelFamilyInvitationMutationVariables>;
+export const RemoveFamilyMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveFamilyMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"memberId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeFamilyMember"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"memberId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"memberId"}}}]}]}}]} as unknown as DocumentNode<RemoveFamilyMemberMutation, RemoveFamilyMemberMutationVariables>;
+export const LeaveFamilyGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LeaveFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"leaveFamilyGroup"}}]}}]} as unknown as DocumentNode<LeaveFamilyGroupMutation, LeaveFamilyGroupMutationVariables>;
+export const ShareRecipeToFamilyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ShareRecipeToFamily"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ShareRecipeToFamilyInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shareRecipeToFamily"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"contributedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<ShareRecipeToFamilyMutation, ShareRecipeToFamilyMutationVariables>;
+export const CreateFamilyRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateFamilyRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFamilyRecipeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFamilyRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"contributedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<CreateFamilyRecipeMutation, CreateFamilyRecipeMutationVariables>;
+export const UpdateFamilyRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateFamilyRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateFamilyRecipeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateFamilyRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"instructions"}},{"kind":"Field","name":{"kind":"Name","value":"lastModifiedByUserId"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateFamilyRecipeMutation, UpdateFamilyRecipeMutationVariables>;
+export const DeleteFamilyRecipeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteFamilyRecipe"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteFamilyRecipe"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}]}}]} as unknown as DocumentNode<DeleteFamilyRecipeMutation, DeleteFamilyRecipeMutationVariables>;
 export const GetCurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetMealPlanRangeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMealPlanRange"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MealPlanRangeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mealPlanRange"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"entries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"mealType"}},{"kind":"Field","name":{"kind":"Name","value":"meal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecipeType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AdHocMealType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"text"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetMealPlanRangeQuery, GetMealPlanRangeQueryVariables>;
 export const GetRecipesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetRecipes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recipes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"ingredientCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetRecipesQuery, GetRecipesQueryVariables>;
+export const GetCurrentUserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUserProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserProfileQuery, GetCurrentUserProfileQueryVariables>;
+export const GetMyFamilyGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMyFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"memberCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetMyFamilyGroupQuery, GetMyFamilyGroupQueryVariables>;

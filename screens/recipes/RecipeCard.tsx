@@ -1,13 +1,19 @@
 import { Box, Card, ContentRow } from '@/design-system';
+import { useAppSelector } from '@/store/hooks';
+import { ShareToFamilyButton } from './ShareToFamilyButton';
 
 export interface RecipeCardProps {
   name: string;
+  slug: string;
   subtitle?: string;
   color: string;
   onPress?: () => void;
 }
 
-export function RecipeCard({ name, subtitle, color, onPress }: RecipeCardProps): React.JSX.Element {
+export function RecipeCard({ name, slug, subtitle, color, onPress }: RecipeCardProps): React.JSX.Element {
+  const familyGroupId = useAppSelector((state) => state.user.profile?.familyGroupId);
+  const hasFamilyGroup = familyGroupId !== null && familyGroupId !== undefined;
+
   return (
     <Card>
       <ContentRow
@@ -22,6 +28,7 @@ export function RecipeCard({ name, subtitle, color, onPress }: RecipeCardProps):
             backgroundColor={color}
           />
         }
+        right={hasFamilyGroup ? <ShareToFamilyButton recipeSlug={slug} /> : undefined}
         showChevron={false}
       />
     </Card>

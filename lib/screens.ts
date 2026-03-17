@@ -5,4 +5,5 @@ export enum Screen {
   GroceryList = 'GroceryList',
   Settings = 'Settings',
   Modal = 'Modal',
+  FamilyGroup = 'FamilyGroup',
 }

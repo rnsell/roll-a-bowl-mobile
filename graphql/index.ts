@@ -1,1 +1,1 @@
-export { GraphQLProvider } from './client';
+export { GraphQLProvider, useApolloClientInstance } from './client';

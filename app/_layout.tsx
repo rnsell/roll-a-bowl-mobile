@@ -5,6 +5,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import { Newsreader_700Bold } from '@expo-google-fonts/newsreader';
 import {
@@ -17,8 +18,11 @@ import {
 import { ColorSchemeProvider } from '@/components/ColorSchemeProvider';
 import { useColorScheme } from '@/components/useColorScheme';
 import { GlobalErrorBoundary } from '@/components/ErrorBoundary';
+import { BootstrapGate } from '@/components/BootstrapGate';
 import { AuthProvider, useAuth } from '@/auth';
 import { GraphQLProvider } from '@/graphql';
+import { store } from '@/store';
+import { clearUser } from '@/store/user';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -89,11 +93,13 @@ function RootLayoutNav(): React.JSX.Element {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkNavTheme : LightNavTheme}>
       <GlobalErrorBoundary>
-        <AuthProvider>
-          <GraphQLProvider>
-            <AuthGate />
-          </GraphQLProvider>
-        </AuthProvider>
+        <ReduxProvider store={store}>
+          <AuthProvider>
+            <GraphQLProvider>
+              <AuthGate />
+            </GraphQLProvider>
+          </AuthProvider>
+        </ReduxProvider>
       </GlobalErrorBoundary>
     </ThemeProvider>
   );
@@ -116,6 +122,7 @@ function AuthGate(): React.JSX.Element | null {
     const onSignIn = segments[0] === 'sign-in';
 
     if (!isSignedIn && !onSignIn) {
+      store.dispatch(clearUser());
       router.replace('/sign-in');
     } else if (isSignedIn && onSignIn) {
       router.replace('/');
@@ -126,11 +133,21 @@ function AuthGate(): React.JSX.Element | null {
     return null;
   }
 
+  if (!isSignedIn) {
+    return (
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="sign-in" />
+      </Stack>
+    );
+  }
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="sign-in" />
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-    </Stack>
+    <BootstrapGate>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="family-group" options={{ headerShown: true, title: 'Family Group', headerBackTitle: 'Settings' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+      </Stack>
+    </BootstrapGate>
   );
 }

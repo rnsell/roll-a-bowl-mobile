@@ -1,13 +1,16 @@
 import { Suspense, useCallback } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useSuspenseQuery } from '@apollo/client/react';
+import { useRouter } from 'expo-router';
 
-import { Box, Button, Card, ContentRow, Heading, Label, Paragraph, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
+import { Avatar, Box, Button, Card, ContentRow, Heading, Paragraph, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
 import { useColorSchemePreference } from '@/components/ColorSchemeProvider';
 import { useAuth } from '@/auth';
 import { useScreenFocus } from '@/lib/navigation';
 import { Screen } from '@/lib/screens';
 import { GetCurrentUser } from '@/graphql/operations';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { clearUser } from '@/store/user';
 
 const appearanceLabels = {
   system: 'System',
@@ -42,16 +45,7 @@ function UserProfile(): React.JSX.Element {
         label={fullName || 'User'}
         subtitle={email ?? undefined}
         left={
-          <Box
-            width={52}
-            height={52}
-            borderRadius={16}
-            backgroundColor={colors.primary}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Label.Large color="#FFFFFF">{initial}</Label.Large>
-          </Box>
+          <Avatar size="large" initial={initial} />
         }
       />
     </Card>
@@ -62,11 +56,15 @@ export function SettingsScreen(): React.JSX.Element {
   useScreenFocus(Screen.Settings);
   const { colors } = useTheme();
   const { signOut } = useAuth();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const { preference, setPreference } = useColorSchemePreference();
+  const familyGroupName = useAppSelector((state) => state.user.profile?.familyGroupName);
 
   const handleSignOut = useCallback(async () => {
+    dispatch(clearUser());
     await signOut();
-  }, [signOut]);
+  }, [signOut, dispatch]);
 
   const cycleAppearance = useCallback(() => {
     const currentIndex = preferenceOrder.indexOf(preference);
@@ -83,6 +81,16 @@ export function SettingsScreen(): React.JSX.Element {
         <Suspense fallback={<ActivityIndicator size="small" />}>
           <UserProfile />
         </Suspense>
+      </Box>
+
+      <Box mt={3}>
+        <Card title="Family">
+          <ContentRow
+            label="Family Group"
+            subtitle={familyGroupName ?? 'Not a member'}
+            onPress={() => router.push('/family-group')}
+          />
+        </Card>
       </Box>
 
       <Box mt={3}>

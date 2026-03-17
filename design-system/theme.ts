@@ -29,6 +29,7 @@ export const colors = {
     successLight: '#E4EDDF',
     errorLight: '#F3DDD9',
     warningLight: '#F8EFDA',
+    onPrimary: '#FFFFFF',
   },
   dark: {
     background: '#1A1410',
@@ -48,6 +49,7 @@ export const colors = {
     successLight: '#2A3526',
     errorLight: '#3A2220',
     warningLight: '#352E1E',
+    onPrimary: '#1A1410',
   },
 } as const;
 
