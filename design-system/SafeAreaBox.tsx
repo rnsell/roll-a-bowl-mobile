@@ -1,7 +1,9 @@
-import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import type { Edge } from 'react-native-safe-area-context';
 import type { BoxProps, SpacingProps } from './types';
 import { resolveSpacingStyle } from './types';
 import { SPACING_UNIT } from './theme';
+import { useTheme } from './useTheme';
 
 function pickSpacingProps(props: BoxProps): SpacingProps {
   return {
@@ -22,8 +24,13 @@ function pickSpacingProps(props: BoxProps): SpacingProps {
   };
 }
 
-export function Box({
+export interface SafeAreaBoxProps extends BoxProps {
+  edges?: Edge[];
+}
+
+export function SafeAreaBox({
   children,
+  edges,
   backgroundColor,
   border,
   borderColor,
@@ -45,15 +52,16 @@ export function Box({
   height,
   style,
   ...spacingRest
-}: BoxProps): React.JSX.Element {
+}: SafeAreaBoxProps): React.JSX.Element {
+  const { colors } = useTheme();
   const spacingStyle = resolveSpacingStyle(pickSpacingProps({ ...spacingRest, children }));
 
   return (
-    <View
+    <SafeAreaView
+      edges={edges}
       style={[
-        { flexDirection: 'column' as const },
+        { flexDirection: 'column' as const, backgroundColor: backgroundColor ?? colors.background },
         spacingStyle,
-        backgroundColor !== undefined && { backgroundColor },
         border !== undefined && { borderWidth: border },
         borderColor !== undefined && { borderColor },
         borderRadius !== undefined && { borderRadius },
@@ -76,6 +84,6 @@ export function Box({
       ]}
     >
       {children}
-    </View>
+    </SafeAreaView>
   );
 }

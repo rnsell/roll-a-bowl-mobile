@@ -6,6 +6,8 @@ import {
 } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 
 import { useAuth } from '@/auth';
 import { config } from '@/config';
@@ -41,8 +43,21 @@ export function GraphQLProvider({
       };
     });
 
+    const errorLink = onError(({ error }) => {
+      if (CombinedGraphQLErrors.is(error)) {
+        const isAuthError = error.errors.some(
+          (e) =>
+            e.extensions?.['code'] === 'UNAUTHENTICATED' ||
+            e.message.toLowerCase().includes('authentication required'),
+        );
+        if (isAuthError) {
+          void signOutRef.current();
+        }
+      }
+    });
+
     return new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: errorLink.concat(authLink).concat(httpLink),
       cache: new InMemoryCache(),
     });
   }, [getToken]);

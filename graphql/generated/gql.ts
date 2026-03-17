@@ -15,10 +15,12 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 type Documents = {
     "\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n": typeof types.GetCurrentUserDocument,
+    "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": typeof types.GetMealPlanRangeDocument,
     "\n  query GetRecipes {\n    recipes {\n      id\n      name\n      slug\n      ingredientCount\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetRecipesDocument,
 };
 const documents: Documents = {
     "\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n": types.GetCurrentUserDocument,
+    "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": types.GetMealPlanRangeDocument,
     "\n  query GetRecipes {\n    recipes {\n      id\n      name\n      slug\n      ingredientCount\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetRecipesDocument,
 };
 
@@ -40,6 +42,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n"): (typeof documents)["\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

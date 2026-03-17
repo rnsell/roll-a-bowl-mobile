@@ -10,3 +10,6 @@ export const GetCurrentUser = graphql(`
     }
   }
 `);
+
+export { GetMealPlanRange } from './meal-plan';
+export { GetRecipes } from './recipes';

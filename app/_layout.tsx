@@ -6,6 +6,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { Newsreader_700Bold } from '@expo-google-fonts/newsreader';
+import {
+  DMSans_400Regular,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
+
+import { ColorSchemeProvider } from '@/components/ColorSchemeProvider';
 import { useColorScheme } from '@/components/useColorScheme';
 import { GlobalErrorBoundary } from '@/components/ErrorBoundary';
 import { AuthProvider, useAuth } from '@/auth';
@@ -27,6 +36,11 @@ export default function RootLayout(): React.JSX.Element | null {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
+    Newsreader_700Bold,
+    DMSans_400Regular,
+    DMSans_500Medium,
+    DMSans_600SemiBold,
+    DMSans_700Bold,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -38,14 +52,42 @@ export default function RootLayout(): React.JSX.Element | null {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <ColorSchemeProvider>
+      <RootLayoutNav />
+    </ColorSchemeProvider>
+  );
 }
 
 function RootLayoutNav(): React.JSX.Element {
   const colorScheme = useColorScheme();
 
+  const LightNavTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#8B5E3C',
+      background: '#F5EDE4',
+      card: '#F5EDE4',
+      text: '#3B2A1A',
+      border: '#E0D5C8',
+    },
+  };
+
+  const DarkNavTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      primary: '#C9A882',
+      background: '#1A1410',
+      card: '#1A1410',
+      text: '#F0E6DA',
+      border: '#3A3028',
+    },
+  };
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkNavTheme : LightNavTheme}>
       <GlobalErrorBoundary>
         <AuthProvider>
           <GraphQLProvider>
@@ -59,8 +101,8 @@ function RootLayoutNav(): React.JSX.Element {
 
 function AuthGate(): React.JSX.Element | null {
   const { isLoaded, isSignedIn } = useAuth();
-  const segments = useSegments();
   const router = useRouter();
+  const segments = useSegments();
 
   useEffect(() => {
     if (isLoaded) {
@@ -71,23 +113,23 @@ function AuthGate(): React.JSX.Element | null {
   useEffect(() => {
     if (!isLoaded) return;
 
-    const inSignIn = (segments[0] as string) === 'sign-in';
+    const onSignIn = segments[0] === 'sign-in';
 
-    if (isSignedIn && inSignIn) {
-      router.replace('/(tabs)');
-    } else if (!isSignedIn && !inSignIn) {
+    if (!isSignedIn && !onSignIn) {
       router.replace('/sign-in');
+    } else if (isSignedIn && onSignIn) {
+      router.replace('/');
     }
-  }, [isLoaded, isSignedIn, segments]);
+  }, [isLoaded, isSignedIn, segments, router]);
 
   if (!isLoaded) {
     return null;
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="sign-in" />
+      <Stack.Screen name="(tabs)" />
       <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
     </Stack>
   );
