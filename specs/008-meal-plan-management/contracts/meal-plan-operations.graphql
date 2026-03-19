@@ -1,0 +1,126 @@
+# Meal Plan GraphQL Operations
+# All operations needed for the mobile meal plan management feature.
+
+# ── Queries ──────────────────────────────────────────────────────────
+
+# Personal meal plan (already exists)
+query GetMealPlanRange($input: MealPlanRangeInput!) {
+  mealPlanRange(input: $input) {
+    date
+    entries {
+      id
+      mealType
+      meal {
+        ... on RecipeType { id, name, slug }
+        ... on AdHocMealType { id, text }
+      }
+    }
+  }
+}
+
+# Family meal plan (already exists)
+query GetFamilyMealPlanRange($input: FamilyMealPlanRangeInput!) {
+  familyMealPlanRange(input: $input) {
+    date
+    entries {
+      id
+      mealType
+      addedBy
+      meal {
+        ... on RecipeType { id, name, slug }
+        ... on AdHocMealType { id, text }
+      }
+    }
+  }
+}
+
+# ── Personal Mutations ───────────────────────────────────────────────
+
+mutation AddRecipeToMealPlan($input: AddRecipeToMealPlanInput!) {
+  addRecipeToMealPlan(input: $input) {
+    id
+    mealType
+    meal {
+      ... on RecipeType { id, name, slug }
+    }
+  }
+}
+
+mutation RemoveRecipeFromMealPlan($input: RemoveRecipeFromMealPlanInput!) {
+  removeRecipeFromMealPlan(input: $input)
+}
+
+mutation ClearMealSlot($input: ClearMealSlotInput!) {
+  clearMealSlot(input: $input)
+}
+
+mutation AddAdHocMeal($input: AddAdHocMealInput!) {
+  addAdHocMeal(input: $input) {
+    id
+    mealType
+    meal {
+      ... on AdHocMealType { id, text }
+    }
+  }
+}
+
+mutation RemoveAdHocMeal($input: RemoveAdHocMealInput!) {
+  removeAdHocMeal(input: $input)
+}
+
+mutation UpdateAdHocMeal($input: UpdateAdHocMealInput!) {
+  updateAdHocMeal(input: $input) {
+    id
+    mealType
+    meal {
+      ... on AdHocMealType { id, text }
+    }
+  }
+}
+
+# ── Family Mutations ─────────────────────────────────────────────────
+
+mutation AddRecipeToFamilyMealPlan($input: AddRecipeToFamilyMealPlanInput!) {
+  addRecipeToFamilyMealPlan(input: $input) {
+    id
+    mealType
+    addedBy
+    meal {
+      ... on RecipeType { id, name, slug }
+    }
+  }
+}
+
+mutation RemoveRecipeFromFamilyMealPlan($input: RemoveRecipeFromFamilyMealPlanInput!) {
+  removeRecipeFromFamilyMealPlan(input: $input)
+}
+
+mutation ClearFamilyMealSlot($input: ClearFamilyMealSlotInput!) {
+  clearFamilyMealSlot(input: $input)
+}
+
+mutation AddFamilyAdHocMeal($input: AddFamilyAdHocMealInput!) {
+  addFamilyAdHocMeal(input: $input) {
+    id
+    mealType
+    addedBy
+    meal {
+      ... on AdHocMealType { id, text }
+    }
+  }
+}
+
+mutation RemoveFamilyAdHocMeal($input: RemoveFamilyAdHocMealInput!) {
+  removeFamilyAdHocMeal(input: $input)
+}
+
+mutation UpdateFamilyAdHocMeal($input: UpdateFamilyAdHocMealInput!) {
+  updateFamilyAdHocMeal(input: $input) {
+    id
+    mealType
+    addedBy
+    meal {
+      ... on AdHocMealType { id, text }
+    }
+  }
+}

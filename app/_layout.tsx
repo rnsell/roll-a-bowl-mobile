@@ -15,8 +15,11 @@ import {
   DMSans_700Bold,
 } from '@expo-google-fonts/dm-sans';
 
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ColorSchemeProvider } from '@/components/ColorSchemeProvider';
 import { useColorScheme } from '@/components/useColorScheme';
+import { colors as themeColors } from '@/design-system';
 import { GlobalErrorBoundary } from '@/components/ErrorBoundary';
 import { BootstrapGate } from '@/components/BootstrapGate';
 import { AuthProvider, useAuth } from '@/auth';
@@ -57,9 +60,11 @@ export default function RootLayout(): React.JSX.Element | null {
   }
 
   return (
-    <ColorSchemeProvider>
-      <RootLayoutNav />
-    </ColorSchemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ColorSchemeProvider>
+        <RootLayoutNav />
+      </ColorSchemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
@@ -70,11 +75,11 @@ function RootLayoutNav(): React.JSX.Element {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: '#8B5E3C',
-      background: '#F5EDE4',
-      card: '#F5EDE4',
-      text: '#3B2A1A',
-      border: '#E0D5C8',
+      primary: themeColors.light.primary,
+      background: themeColors.light.background,
+      card: themeColors.light.background,
+      text: themeColors.light.text,
+      border: themeColors.light.border,
     },
   };
 
@@ -82,11 +87,11 @@ function RootLayoutNav(): React.JSX.Element {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      primary: '#C9A882',
-      background: '#1A1410',
-      card: '#1A1410',
-      text: '#F0E6DA',
-      border: '#3A3028',
+      primary: themeColors.dark.primary,
+      background: themeColors.dark.background,
+      card: themeColors.dark.background,
+      text: themeColors.dark.text,
+      border: themeColors.dark.border,
     },
   };
 
@@ -96,7 +101,9 @@ function RootLayoutNav(): React.JSX.Element {
         <ReduxProvider store={store}>
           <AuthProvider>
             <GraphQLProvider>
-              <AuthGate />
+              <BottomSheetModalProvider>
+                <AuthGate />
+              </BottomSheetModalProvider>
             </GraphQLProvider>
           </AuthProvider>
         </ReduxProvider>

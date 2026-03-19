@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 
-import { Box, Caption, Label, spacing, useTheme } from '@/design-system';
+import { Box, Caption, Label, useTheme } from '@/design-system';
 
 interface DayPillProps {
   day: string;
@@ -14,37 +14,30 @@ export function DayPill({ day, dayNum, active, hasMeals, onPress }: DayPillProps
   const { colors } = useTheme();
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.root,
-        active && { backgroundColor: colors.primary },
-      ]}
-    >
-      <Caption.Small color={active ? 'rgba(255,255,255,0.7)' : colors.textLight}>
-        {day}
-      </Caption.Small>
-      <Label.Regular color={active ? '#FFFFFF' : colors.text}>
-        {dayNum}
-      </Label.Regular>
-      {hasMeals && !active && (
-        <Box
-          width={5}
-          height={5}
-          borderRadius={3}
-          backgroundColor={colors.primaryLight}
-        />
-      )}
+    <Pressable onPress={onPress}>
+      <Box
+        alignItems="center"
+        width={44}
+        py={1}
+        borderRadius={14}
+        gap={0.5}
+        backgroundColor={active ? colors.primary : undefined}
+      >
+        <Caption.Small color={active ? colors.onPrimary : colors.textLight} style={{ opacity: active ? 0.7 : 1 }}>
+          {day}
+        </Caption.Small>
+        <Label.Regular color={active ? colors.onPrimary : colors.text}>
+          {dayNum}
+        </Label.Regular>
+        {hasMeals && !active && (
+          <Box
+            width={5}
+            height={5}
+            borderRadius={3}
+            backgroundColor={colors.primaryLight}
+          />
+        )}
+      </Box>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    width: 44,
-    paddingVertical: spacing(1),
-    borderRadius: 14,
-    gap: 4,
-  },
-});

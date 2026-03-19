@@ -29,6 +29,19 @@ type Documents = {
     "\n  mutation DeleteFamilyRecipe($slug: String!) {\n    deleteFamilyRecipe(slug: $slug)\n  }\n": typeof types.DeleteFamilyRecipeDocument,
     "\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n": typeof types.GetCurrentUserDocument,
     "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": typeof types.GetMealPlanRangeDocument,
+    "\n  query GetFamilyMealPlanRange($input: FamilyMealPlanRangeInput!) {\n    familyMealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        addedBy\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": typeof types.GetFamilyMealPlanRangeDocument,
+    "\n  mutation AddRecipeToMealPlan($input: AddRecipeToMealPlanInput!) {\n    addRecipeToMealPlan(input: $input) {\n      id\n      mealType\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n": typeof types.AddRecipeToMealPlanDocument,
+    "\n  mutation RemoveRecipeFromMealPlan($input: RemoveRecipeFromMealPlanInput!) {\n    removeRecipeFromMealPlan(input: $input)\n  }\n": typeof types.RemoveRecipeFromMealPlanDocument,
+    "\n  mutation ClearMealSlot($input: ClearMealSlotInput!) {\n    clearMealSlot(input: $input)\n  }\n": typeof types.ClearMealSlotDocument,
+    "\n  mutation AddAdHocMeal($input: AddAdHocMealInput!) {\n    addAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": typeof types.AddAdHocMealDocument,
+    "\n  mutation RemoveAdHocMeal($input: RemoveAdHocMealInput!) {\n    removeAdHocMeal(input: $input)\n  }\n": typeof types.RemoveAdHocMealDocument,
+    "\n  mutation UpdateAdHocMeal($input: UpdateAdHocMealInput!) {\n    updateAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": typeof types.UpdateAdHocMealDocument,
+    "\n  mutation AddRecipeToFamilyMealPlan($input: AddRecipeToFamilyMealPlanInput!) {\n    addRecipeToFamilyMealPlan(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n": typeof types.AddRecipeToFamilyMealPlanDocument,
+    "\n  mutation RemoveRecipeFromFamilyMealPlan($input: RemoveRecipeFromFamilyMealPlanInput!) {\n    removeRecipeFromFamilyMealPlan(input: $input)\n  }\n": typeof types.RemoveRecipeFromFamilyMealPlanDocument,
+    "\n  mutation ClearFamilyMealSlot($input: ClearFamilyMealSlotInput!) {\n    clearFamilyMealSlot(input: $input)\n  }\n": typeof types.ClearFamilyMealSlotDocument,
+    "\n  mutation AddFamilyAdHocMeal($input: AddFamilyAdHocMealInput!) {\n    addFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": typeof types.AddFamilyAdHocMealDocument,
+    "\n  mutation RemoveFamilyAdHocMeal($input: RemoveFamilyAdHocMealInput!) {\n    removeFamilyAdHocMeal(input: $input)\n  }\n": typeof types.RemoveFamilyAdHocMealDocument,
+    "\n  mutation UpdateFamilyAdHocMeal($input: UpdateFamilyAdHocMealInput!) {\n    updateFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": typeof types.UpdateFamilyAdHocMealDocument,
     "\n  query GetRecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      id\n      name\n      slug\n      instructions\n      sourceUrl\n      isFamilyRecipe\n      isOwnedByCurrentUser\n      ingredientCount\n      ingredients {\n        id\n        quantity\n        displayText\n        sortOrder\n        isOptional\n        preparationNote\n        ingredient {\n          id\n          name\n        }\n        measurement {\n          id\n          abbreviation\n          type\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetRecipeDetailDocument,
     "\n  mutation AddRecipeIngredient($input: AddRecipeIngredientInput!) {\n    addRecipeIngredient(input: $input) {\n      id\n      quantity\n      displayText\n      sortOrder\n      isOptional\n      preparationNote\n      ingredient {\n        id\n        name\n      }\n      measurement {\n        id\n        abbreviation\n        type\n      }\n    }\n  }\n": typeof types.AddRecipeIngredientDocument,
     "\n  mutation UpdateRecipeIngredient($input: UpdateRecipeIngredientInput!) {\n    updateRecipeIngredient(input: $input) {\n      id\n      quantity\n      displayText\n      sortOrder\n      isOptional\n      preparationNote\n      ingredient {\n        id\n        name\n      }\n      measurement {\n        id\n        abbreviation\n        type\n      }\n    }\n  }\n": typeof types.UpdateRecipeIngredientDocument,
@@ -57,6 +70,19 @@ const documents: Documents = {
     "\n  mutation DeleteFamilyRecipe($slug: String!) {\n    deleteFamilyRecipe(slug: $slug)\n  }\n": types.DeleteFamilyRecipeDocument,
     "\n  query GetCurrentUser {\n    user {\n      id\n      firstName\n      lastName\n      email\n    }\n  }\n": types.GetCurrentUserDocument,
     "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": types.GetMealPlanRangeDocument,
+    "\n  query GetFamilyMealPlanRange($input: FamilyMealPlanRangeInput!) {\n    familyMealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        addedBy\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n": types.GetFamilyMealPlanRangeDocument,
+    "\n  mutation AddRecipeToMealPlan($input: AddRecipeToMealPlanInput!) {\n    addRecipeToMealPlan(input: $input) {\n      id\n      mealType\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n": types.AddRecipeToMealPlanDocument,
+    "\n  mutation RemoveRecipeFromMealPlan($input: RemoveRecipeFromMealPlanInput!) {\n    removeRecipeFromMealPlan(input: $input)\n  }\n": types.RemoveRecipeFromMealPlanDocument,
+    "\n  mutation ClearMealSlot($input: ClearMealSlotInput!) {\n    clearMealSlot(input: $input)\n  }\n": types.ClearMealSlotDocument,
+    "\n  mutation AddAdHocMeal($input: AddAdHocMealInput!) {\n    addAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": types.AddAdHocMealDocument,
+    "\n  mutation RemoveAdHocMeal($input: RemoveAdHocMealInput!) {\n    removeAdHocMeal(input: $input)\n  }\n": types.RemoveAdHocMealDocument,
+    "\n  mutation UpdateAdHocMeal($input: UpdateAdHocMealInput!) {\n    updateAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": types.UpdateAdHocMealDocument,
+    "\n  mutation AddRecipeToFamilyMealPlan($input: AddRecipeToFamilyMealPlanInput!) {\n    addRecipeToFamilyMealPlan(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n": types.AddRecipeToFamilyMealPlanDocument,
+    "\n  mutation RemoveRecipeFromFamilyMealPlan($input: RemoveRecipeFromFamilyMealPlanInput!) {\n    removeRecipeFromFamilyMealPlan(input: $input)\n  }\n": types.RemoveRecipeFromFamilyMealPlanDocument,
+    "\n  mutation ClearFamilyMealSlot($input: ClearFamilyMealSlotInput!) {\n    clearFamilyMealSlot(input: $input)\n  }\n": types.ClearFamilyMealSlotDocument,
+    "\n  mutation AddFamilyAdHocMeal($input: AddFamilyAdHocMealInput!) {\n    addFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": types.AddFamilyAdHocMealDocument,
+    "\n  mutation RemoveFamilyAdHocMeal($input: RemoveFamilyAdHocMealInput!) {\n    removeFamilyAdHocMeal(input: $input)\n  }\n": types.RemoveFamilyAdHocMealDocument,
+    "\n  mutation UpdateFamilyAdHocMeal($input: UpdateFamilyAdHocMealInput!) {\n    updateFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n": types.UpdateFamilyAdHocMealDocument,
     "\n  query GetRecipeDetail($slug: String!) {\n    recipe(slug: $slug) {\n      id\n      name\n      slug\n      instructions\n      sourceUrl\n      isFamilyRecipe\n      isOwnedByCurrentUser\n      ingredientCount\n      ingredients {\n        id\n        quantity\n        displayText\n        sortOrder\n        isOptional\n        preparationNote\n        ingredient {\n          id\n          name\n        }\n        measurement {\n          id\n          abbreviation\n          type\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetRecipeDetailDocument,
     "\n  mutation AddRecipeIngredient($input: AddRecipeIngredientInput!) {\n    addRecipeIngredient(input: $input) {\n      id\n      quantity\n      displayText\n      sortOrder\n      isOptional\n      preparationNote\n      ingredient {\n        id\n        name\n      }\n      measurement {\n        id\n        abbreviation\n        type\n      }\n    }\n  }\n": types.AddRecipeIngredientDocument,
     "\n  mutation UpdateRecipeIngredient($input: UpdateRecipeIngredientInput!) {\n    updateRecipeIngredient(input: $input) {\n      id\n      quantity\n      displayText\n      sortOrder\n      isOptional\n      preparationNote\n      ingredient {\n        id\n        name\n      }\n      measurement {\n        id\n        abbreviation\n        type\n      }\n    }\n  }\n": types.UpdateRecipeIngredientDocument,
@@ -144,6 +170,58 @@ export function graphql(source: "\n  query GetCurrentUser {\n    user {\n      i
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetMealPlanRange($input: MealPlanRangeInput!) {\n    mealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetFamilyMealPlanRange($input: FamilyMealPlanRangeInput!) {\n    familyMealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        addedBy\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetFamilyMealPlanRange($input: FamilyMealPlanRangeInput!) {\n    familyMealPlanRange(input: $input) {\n      date\n      entries {\n        id\n        mealType\n        addedBy\n        meal {\n          ... on RecipeType {\n            id\n            name\n            slug\n          }\n          ... on AdHocMealType {\n            id\n            text\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddRecipeToMealPlan($input: AddRecipeToMealPlanInput!) {\n    addRecipeToMealPlan(input: $input) {\n      id\n      mealType\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation AddRecipeToMealPlan($input: AddRecipeToMealPlanInput!) {\n    addRecipeToMealPlan(input: $input) {\n      id\n      mealType\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveRecipeFromMealPlan($input: RemoveRecipeFromMealPlanInput!) {\n    removeRecipeFromMealPlan(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveRecipeFromMealPlan($input: RemoveRecipeFromMealPlanInput!) {\n    removeRecipeFromMealPlan(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ClearMealSlot($input: ClearMealSlotInput!) {\n    clearMealSlot(input: $input)\n  }\n"): (typeof documents)["\n  mutation ClearMealSlot($input: ClearMealSlotInput!) {\n    clearMealSlot(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddAdHocMeal($input: AddAdHocMealInput!) {\n    addAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation AddAdHocMeal($input: AddAdHocMealInput!) {\n    addAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveAdHocMeal($input: RemoveAdHocMealInput!) {\n    removeAdHocMeal(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveAdHocMeal($input: RemoveAdHocMealInput!) {\n    removeAdHocMeal(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateAdHocMeal($input: UpdateAdHocMealInput!) {\n    updateAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateAdHocMeal($input: UpdateAdHocMealInput!) {\n    updateAdHocMeal(input: $input) {\n      id\n      mealType\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddRecipeToFamilyMealPlan($input: AddRecipeToFamilyMealPlanInput!) {\n    addRecipeToFamilyMealPlan(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation AddRecipeToFamilyMealPlan($input: AddRecipeToFamilyMealPlanInput!) {\n    addRecipeToFamilyMealPlan(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on RecipeType { id, name, slug }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveRecipeFromFamilyMealPlan($input: RemoveRecipeFromFamilyMealPlanInput!) {\n    removeRecipeFromFamilyMealPlan(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveRecipeFromFamilyMealPlan($input: RemoveRecipeFromFamilyMealPlanInput!) {\n    removeRecipeFromFamilyMealPlan(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ClearFamilyMealSlot($input: ClearFamilyMealSlotInput!) {\n    clearFamilyMealSlot(input: $input)\n  }\n"): (typeof documents)["\n  mutation ClearFamilyMealSlot($input: ClearFamilyMealSlotInput!) {\n    clearFamilyMealSlot(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddFamilyAdHocMeal($input: AddFamilyAdHocMealInput!) {\n    addFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation AddFamilyAdHocMeal($input: AddFamilyAdHocMealInput!) {\n    addFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveFamilyAdHocMeal($input: RemoveFamilyAdHocMealInput!) {\n    removeFamilyAdHocMeal(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveFamilyAdHocMeal($input: RemoveFamilyAdHocMealInput!) {\n    removeFamilyAdHocMeal(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateFamilyAdHocMeal($input: UpdateFamilyAdHocMealInput!) {\n    updateFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateFamilyAdHocMeal($input: UpdateFamilyAdHocMealInput!) {\n    updateFamilyAdHocMeal(input: $input) {\n      id\n      mealType\n      addedBy\n      meal {\n        ... on AdHocMealType { id, text }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
