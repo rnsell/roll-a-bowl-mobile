@@ -1,16 +1,13 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
-import { useTheme } from '@/design-system';
+import { Icon, useTheme } from '@/design-system';
+import type { IconName } from '@/design-system/Icon';
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}): React.JSX.Element {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+function TabBarIcon({ name, color }: { name: IconName; color: string }): React.JSX.Element {
+  return <Icon name={name} size="xxl" color={color} />;
 }
 
 export default function TabLayout(): React.JSX.Element {
@@ -25,6 +22,10 @@ export default function TabLayout(): React.JSX.Element {
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
+          paddingTop: 8,
+        },
+        tabBarIconStyle: {
+          marginBottom: 4,
         },
         headerStyle: {
           backgroundColor: colors.background,

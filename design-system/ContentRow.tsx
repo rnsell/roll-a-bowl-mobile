@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import type { ReactNode } from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Box } from './Box';
+import { Icon } from './Icon';
 import { Row } from './Row';
 import Label from './Label';
 import Caption from './Caption';
@@ -44,7 +44,7 @@ export function ContentRow({
   const rightElement =
     right ??
     (showChevron ? (
-      <FontAwesome name="chevron-right" size={14} color={colors.textLight} />
+      <Icon name="chevron-right" size="md" color={colors.textLight} />
     ) : null);
 
   return (

@@ -143,9 +143,13 @@ function AuthGate(): React.JSX.Element | null {
 
   return (
     <BootstrapGate>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: false, headerBackButtonDisplayMode: 'minimal' }}>
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="family-group" options={{ headerShown: true, title: 'Family Group', headerBackTitle: 'Settings' }} />
+        <Stack.Screen name="family-group" options={{ headerShown: true, title: 'Family Group' }} />
+        <Stack.Screen name="recipe/[slug]" options={{ headerShown: true, title: 'Recipe' }} />
+        <Stack.Screen name="edit-recipe" options={{ headerShown: true, title: 'Edit Recipe' }} />
+        <Stack.Screen name="edit-recipe-instructions" options={{ headerShown: true, title: 'Edit Instructions' }} />
+        <Stack.Screen name="create-recipe" options={{ headerShown: true, title: 'New Recipe' }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </BootstrapGate>

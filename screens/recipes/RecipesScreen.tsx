@@ -1,16 +1,13 @@
-import { Suspense, useState } from 'react';
-import { ActivityIndicator, StyleSheet, TextInput } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Suspense, useCallback } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, TextInput } from 'react-native';
 import { useSuspenseQuery } from '@apollo/client/react';
+import { useRouter } from 'expo-router';
 
-import { Avatar, Box, Caption, Heading, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
-import { GetRecipes } from '@/graphql/operations';
+import { Avatar, Box, Caption, Heading, Icon, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
+import { GetUnifiedRecipes } from '@/graphql/operations';
 import { useScreenFocus } from '@/lib/navigation';
 import { Screen } from '@/lib/screens';
-import { useAppSelector } from '@/store/hooks';
 import { RecipeCard } from './RecipeCard';
-import { RecipesTabs, type RecipeTab } from './RecipesTabs';
-import { FamilyRecipesList } from './FamilyRecipesList';
 
 const placeholderColors = [
   '#C9956B', '#7BA06B', '#C0574B', '#D4A843', '#6B8F5E',
@@ -23,8 +20,9 @@ function pickColor(id: number): string {
 
 function RecipeList(): React.JSX.Element {
   const { colors } = useTheme();
-  const { data } = useSuspenseQuery(GetRecipes);
-  const recipes = data.recipes;
+  const router = useRouter();
+  const { data } = useSuspenseQuery(GetUnifiedRecipes);
+  const recipes = data.unifiedRecipes;
 
   return (
     <>
@@ -42,6 +40,8 @@ function RecipeList(): React.JSX.Element {
             slug={recipe.slug}
             subtitle={`${recipe.ingredientCount} ingredients`}
             color={pickColor(recipe.id)}
+            isFamilyRecipe={recipe.isFamilyRecipe}
+            onPress={() => router.push(`/recipe/${recipe.slug}`)}
           />
         ))}
       </Box>
@@ -52,25 +52,23 @@ function RecipeList(): React.JSX.Element {
 export function RecipesScreen(): React.JSX.Element {
   useScreenFocus(Screen.Recipes);
   const { colors, fonts } = useTheme();
-  const familyGroupId = useAppSelector((state) => state.user.profile?.familyGroupId);
-  const hasFamilyGroup = familyGroupId !== null && familyGroupId !== undefined;
-  const [activeTab, setActiveTab] = useState<RecipeTab>('my');
+  const router = useRouter();
+
+  const handleAddRecipe = useCallback(() => {
+    router.push('/create-recipe');
+  }, [router]);
 
   return (
     <SafeAreaBox flex={1} edges={['top']}>
       <ScrollBox contentSpacing={{ px: 2.5, pt: 0.5, pb: 4 }}>
         <Row alignItems="center" justifyContent="space-between">
           <Heading.Regular>Recipes</Heading.Regular>
-          <Avatar>
-            <FontAwesome name="plus" size={16} color={colors.onPrimary} />
-          </Avatar>
+          <Pressable onPress={handleAddRecipe}>
+            <Avatar>
+              <Icon name="plus" size="lg" color={colors.onPrimary} />
+            </Avatar>
+          </Pressable>
         </Row>
-
-        {hasFamilyGroup ? (
-          <Box mt={2}>
-            <RecipesTabs activeTab={activeTab} onTabChange={setActiveTab} />
-          </Box>
-        ) : null}
 
         <Box mt={2}>
           <Row
@@ -83,7 +81,7 @@ export function RecipesScreen(): React.JSX.Element {
             border={1}
             borderColor={colors.border}
           >
-            <FontAwesome name="search" size={16} color={colors.textLight} />
+            <Icon name="search" size="lg" color={colors.textLight} />
             <TextInput
               placeholder="Search recipes..."
               placeholderTextColor={colors.textLight}
@@ -92,17 +90,13 @@ export function RecipesScreen(): React.JSX.Element {
           </Row>
         </Box>
 
-        {activeTab === 'my' || !hasFamilyGroup ? (
-          <Suspense fallback={
-            <Box mt={4} alignItems="center">
-              <ActivityIndicator size="small" />
-            </Box>
-          }>
-            <RecipeList />
-          </Suspense>
-        ) : (
-          <FamilyRecipesList />
-        )}
+        <Suspense fallback={
+          <Box mt={4} alignItems="center">
+            <ActivityIndicator size="small" />
+          </Box>
+        }>
+          <RecipeList />
+        </Suspense>
       </ScrollBox>
     </SafeAreaBox>
   );

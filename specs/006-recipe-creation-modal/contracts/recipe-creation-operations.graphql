@@ -1,0 +1,44 @@
+# GraphQL operations needed for recipe creation modal
+# These operations already exist in the web app backend.
+# The mobile app needs to add these operation definitions to graphql/operations/recipes.ts
+
+mutation CreateRecipe($input: CreateRecipeInput!) {
+  createRecipe(input: $input) {
+    id
+    name
+    slug
+    instructions
+    ingredientCount
+    createdAt
+    updatedAt
+  }
+}
+
+query SearchIngredients($input: SearchIngredientsInput!) {
+  searchIngredients(input: $input) {
+    ingredients {
+      id
+      name
+      isSystem
+      isCustom
+      category {
+        id
+        name
+        slug
+      }
+    }
+    totalCount
+  }
+}
+
+query GetMeasurements($input: GetMeasurementsInput) {
+  measurements(input: $input) {
+    id
+    name
+    abbreviation
+    type
+    displayOrder
+    isExposed
+    isQualitative
+  }
+}

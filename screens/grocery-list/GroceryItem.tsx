@@ -1,7 +1,5 @@
 import { Pressable, StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-
-import { Box, Label, Caption, Row, useTheme } from '@/design-system';
+import { Box, Icon, Label, Caption, Row, useTheme } from '@/design-system';
 
 export interface GroceryItemData {
   name: string;
@@ -31,7 +29,7 @@ export function GroceryItem({ item, onToggle }: GroceryItemProps): React.JSX.Ele
           justifyContent="center"
         >
           {item.checked && (
-            <FontAwesome name="check" size={12} color="#FFFFFF" />
+            <Icon name="check" size="sm" color="#FFFFFF" />
           )}
         </Box>
         <Box flex={1}>

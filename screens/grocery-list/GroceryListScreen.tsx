@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-
-import { Box, Caption, Card, Heading, Label, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
+import { Box, Caption, Card, Heading, Icon, Label, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
 import { useScreenFocus } from '@/lib/navigation';
 import { Screen } from '@/lib/screens';
 import { ProgressBar } from './ProgressBar';
@@ -86,7 +84,7 @@ export function GroceryListScreen(): React.JSX.Element {
             alignItems="center"
             justifyContent="center"
           >
-            <FontAwesome name="plus" size={16} color="#FFFFFF" />
+            <Icon name="plus" size="lg" color="#FFFFFF" />
           </Box>
         </Row>
 
@@ -104,7 +102,7 @@ export function GroceryListScreen(): React.JSX.Element {
             py={0.5}
             alignSelf="flex-start"
           >
-            <FontAwesome name="calendar" size={12} color={colors.warning} />
+            <Icon name="calendar" size="sm" color={colors.warning} />
             <Caption.Small color={colors.warning} style={styles.badgeText}>
               From this week's meal plan
             </Caption.Small>
