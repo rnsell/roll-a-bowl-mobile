@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import { Box, Icon, Label, Caption, Row, useTheme } from '@/design-system';
 
 export interface GroceryItemData {
@@ -16,8 +16,8 @@ export function GroceryItem({ item, onToggle }: GroceryItemProps): React.JSX.Ele
   const { colors } = useTheme();
 
   return (
-    <Pressable onPress={onToggle} style={[styles.root, item.checked && styles.checked]}>
-      <Row alignItems="center" gap={1.5}>
+    <Pressable onPress={onToggle} style={item.checked ? { opacity: 0.55 } : undefined}>
+      <Row alignItems="center" gap={1.5} py={1.5} px={2}>
         <Box
           width={24}
           height={24}
@@ -29,13 +29,13 @@ export function GroceryItem({ item, onToggle }: GroceryItemProps): React.JSX.Ele
           justifyContent="center"
         >
           {item.checked && (
-            <Icon name="check" size="sm" color="#FFFFFF" />
+            <Icon name="check" size="sm" color={colors.onPrimary} />
           )}
         </Box>
         <Box flex={1}>
           <Label.Regular
             color={colors.text}
-            style={item.checked ? styles.strikethrough : undefined}
+            style={item.checked ? { textDecorationLine: 'line-through' } : undefined}
           >
             {item.name}
           </Label.Regular>
@@ -45,16 +45,3 @@ export function GroceryItem({ item, onToggle }: GroceryItemProps): React.JSX.Ele
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  checked: {
-    opacity: 0.55,
-  },
-  strikethrough: {
-    textDecorationLine: 'line-through',
-  },
-});

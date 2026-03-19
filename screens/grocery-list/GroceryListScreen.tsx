@@ -84,7 +84,7 @@ export function GroceryListScreen(): React.JSX.Element {
             alignItems="center"
             justifyContent="center"
           >
-            <Icon name="plus" size="lg" color="#FFFFFF" />
+            <Icon name="plus" size="lg" color={colors.onPrimary} />
           </Box>
         </Row>
 

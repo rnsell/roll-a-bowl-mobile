@@ -11,7 +11,22 @@ export const GetCurrentUser = graphql(`
   }
 `);
 
-export { GetMealPlanRange } from './meal-plan';
+export {
+  GetMealPlanRange,
+  GetFamilyMealPlanRange,
+  AddRecipeToMealPlan,
+  RemoveRecipeFromMealPlan,
+  ClearMealSlot,
+  AddAdHocMeal,
+  RemoveAdHocMeal,
+  UpdateAdHocMeal,
+  AddRecipeToFamilyMealPlan,
+  RemoveRecipeFromFamilyMealPlan,
+  ClearFamilyMealSlot,
+  AddFamilyAdHocMeal,
+  RemoveFamilyAdHocMeal,
+  UpdateFamilyAdHocMeal,
+} from './meal-plan';
 export { GetRecipeDetail, GetUnifiedRecipes, CreateRecipe, UpdateRecipe, AddRecipeIngredient, UpdateRecipeIngredient, RemoveRecipeIngredient, SearchIngredients, GetMeasurements } from './recipes';
 export { GetCurrentUserProfile, GetMyFamilyGroup } from './user-setup';
 export {
