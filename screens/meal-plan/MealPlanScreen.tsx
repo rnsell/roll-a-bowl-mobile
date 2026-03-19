@@ -1,9 +1,8 @@
 import { Suspense, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useSuspenseQuery } from '@apollo/client/react';
 
-import { Box, Button, Caption, Heading, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
+import { Box, Button, Caption, Heading, Icon, Row, SafeAreaBox, ScrollBox, useTheme } from '@/design-system';
 import { GetMealPlanRange } from '@/graphql/operations';
 import type { GetMealPlanRangeQuery } from '@/graphql/generated/graphql';
 import { useScreenFocus } from '@/lib/navigation';
@@ -167,11 +166,11 @@ function MealPlanContent({ week }: { week: WeekInfo }): React.JSX.Element {
     <>
       <Box mt={1}>
         <Row alignItems="center" gap={1}>
-          <FontAwesome name="chevron-left" size={12} color={colors.primary} />
+          <Icon name="chevron-left" size="sm" color={colors.primary} />
           <Caption.Regular color={colors.secondary} style={styles.weekLabel}>
             {week.weekLabel}
           </Caption.Regular>
-          <FontAwesome name="chevron-right" size={12} color={colors.primary} />
+          <Icon name="chevron-right" size="sm" color={colors.primary} />
         </Row>
       </Box>
 
@@ -228,7 +227,7 @@ export function MealPlanScreen(): React.JSX.Element {
             alignItems="center"
             justifyContent="center"
           >
-            <FontAwesome name="plus" size={16} color="#FFFFFF" />
+            <Icon name="plus" size="lg" color="#FFFFFF" />
           </Box>
         </Row>
 

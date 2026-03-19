@@ -1,0 +1,7 @@
+diff --git a/node_modules/html-entities/lib/index.js b/node_modules/html-entities/lib/index.js
+index 1234567..abcdefg 100644
+--- a/node_modules/html-entities/lib/index.js
++++ b/node_modules/html-entities/lib/index.js
+@@ -1 +1 @@
+-"use strict";var __assign=this&&this.__assign||function(){__assign=Object.assign||function(t){for(var s,i=1,n=arguments.length;i<n;i++){s=arguments[i];for(var p in s)if(Object.prototype.hasOwnProperty.call(s,p))t[p]=s[p]}return t};return __assign.apply(this,arguments)};Object.defineProperty(exports,"__esModule",{value:true});
++"worklet";"use strict";var __assign=this&&this.__assign||function(){__assign=Object.assign||function(t){for(var s,i=1,n=arguments.length;i<n;i++){s=arguments[i];for(var p in s)if(Object.prototype.hasOwnProperty.call(s,p))t[p]=s[p]}return t};return __assign.apply(this,arguments)};Object.defineProperty(exports,"__esModule",{value:true});

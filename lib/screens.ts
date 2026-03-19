@@ -6,4 +6,9 @@ export enum Screen {
   Settings = 'Settings',
   Modal = 'Modal',
   FamilyGroup = 'FamilyGroup',
+  RecipeDetail = 'RecipeDetail',
+  CreateRecipeDetails = 'CreateRecipeDetails',
+  CreateRecipeInstructions = 'CreateRecipeInstructions',
+  EditRecipeDetails = 'EditRecipeDetails',
+  EditRecipeInstructions = 'EditRecipeInstructions',
 }

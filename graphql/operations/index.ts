@@ -12,7 +12,7 @@ export const GetCurrentUser = graphql(`
 `);
 
 export { GetMealPlanRange } from './meal-plan';
-export { GetRecipes } from './recipes';
+export { GetRecipeDetail, GetUnifiedRecipes, CreateRecipe, UpdateRecipe, AddRecipeIngredient, UpdateRecipeIngredient, RemoveRecipeIngredient, SearchIngredients, GetMeasurements } from './recipes';
 export { GetCurrentUserProfile, GetMyFamilyGroup } from './user-setup';
 export {
   GetFamilyGroupInvitations,

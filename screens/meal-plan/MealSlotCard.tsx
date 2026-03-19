@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-
-import { Box, Card, Caption, Label, Row, useTheme } from '@/design-system';
+import { Box, Card, Caption, Icon, Label, Row, useTheme } from '@/design-system';
 
 export interface MealSlot {
   meal: string;
@@ -27,7 +25,7 @@ export function MealSlotCard({ slot }: { slot: MealSlot }): React.JSX.Element {
             justifyContent="center"
             style={styles.dashedPlaceholder}
           >
-            <FontAwesome name="plus" size={16} color={colors.textLight} />
+            <Icon name="plus" size="lg" color={colors.textLight} />
           </Box>
         ) : (
           <Box
@@ -50,7 +48,7 @@ export function MealSlotCard({ slot }: { slot: MealSlot }): React.JSX.Element {
             </Label.Regular>
           </Box>
         </Box>
-        <FontAwesome name="chevron-right" size={14} color={colors.textLight} />
+        <Icon name="chevron-right" size="md" color={colors.textLight} />
       </Row>
     </Card>
   );
