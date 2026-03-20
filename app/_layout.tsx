@@ -22,6 +22,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { colors as themeColors } from '@/design-system';
 import { GlobalErrorBoundary } from '@/components/ErrorBoundary';
 import { BootstrapGate } from '@/components/BootstrapGate';
+import { TermsGate } from '@/components/TermsGate';
 import { AuthProvider, useAuth } from '@/auth';
 import { GraphQLProvider } from '@/graphql';
 import { store } from '@/store';
@@ -150,6 +151,7 @@ function AuthGate(): React.JSX.Element | null {
 
   return (
     <BootstrapGate>
+      <TermsGate>
       <Stack screenOptions={{ headerShown: false, headerBackButtonDisplayMode: 'minimal' }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="family-group" options={{ headerShown: true, title: 'Family Group' }} />
@@ -157,8 +159,10 @@ function AuthGate(): React.JSX.Element | null {
         <Stack.Screen name="edit-recipe" options={{ headerShown: true, title: 'Edit Recipe' }} />
         <Stack.Screen name="edit-recipe-instructions" options={{ headerShown: true, title: 'Edit Instructions' }} />
         <Stack.Screen name="create-recipe" options={{ headerShown: true, title: 'New Recipe' }} />
+        <Stack.Screen name="terms" options={{ headerShown: true, title: 'Terms of Service' }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
+      </TermsGate>
     </BootstrapGate>
   );
 }

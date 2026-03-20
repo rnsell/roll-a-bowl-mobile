@@ -59,3 +59,4 @@ export {
   AddFamilyShoppingListItem,
   RemoveFamilyShoppingListItem,
 } from './shopping-list';
+export { GetTermsStatus, GetCurrentTerms, AcceptTerms } from './terms';

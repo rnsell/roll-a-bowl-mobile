@@ -13,6 +13,7 @@ Auto-generated from all feature plans. Last updated: 2026-02-23
 - TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-sheet (new) (006-recipe-creation-modal)
 - Apollo InMemoryCache (query cache), local React state (ephemeral form data) (006-recipe-creation-modal)
 - Apollo InMemoryCache (query cache), Redux store (user profile/family group state) (008-meal-plan-management)
+- Apollo InMemoryCache (terms status cached) (010-terms-acceptance)
 
 - TypeScript 5.9 (strict mode) + Expo 54, Expo Router 6, React Native 0.81, (001-tab-navigator-setup)
 
@@ -32,9 +33,9 @@ npm test && npm run lint
 TypeScript 5.9 (strict mode): Follow standard conventions
 
 ## Recent Changes
+- 010-terms-acceptance: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x
 - 009-shopping-list: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-shee
 - 008-meal-plan-management: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-shee
-- 006-recipe-creation-modal: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-sheet (new)
 
 
 <!-- MANUAL ADDITIONS START -->

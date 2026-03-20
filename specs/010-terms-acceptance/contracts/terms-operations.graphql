@@ -1,0 +1,26 @@
+# Terms GraphQL Operations for Mobile
+
+query GetTermsStatus {
+  termsStatus {
+    requiresAcceptance
+    currentVersion
+    acceptedVersion
+    effectiveDate
+  }
+}
+
+query GetCurrentTerms {
+  currentTerms {
+    version
+    content
+    effectiveDate
+  }
+}
+
+mutation AcceptTerms($version: String!) {
+  acceptTerms(version: $version) {
+    id
+    version
+    acceptedAt
+  }
+}
