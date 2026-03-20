@@ -32,9 +32,9 @@ npm test && npm run lint
 TypeScript 5.9 (strict mode): Follow standard conventions
 
 ## Recent Changes
+- 009-shopping-list: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-shee
 - 008-meal-plan-management: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-shee
 - 006-recipe-creation-modal: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @gorhom/bottom-sheet (new)
-- 005-mobile-family-groups: Added TypeScript 5.9 (strict mode) + React Native 0.81, Expo 54, Expo Router 6, @apollo/client 4.x, @reduxjs/toolkit, react-redux, redux-observable, rxjs
 
 
 <!-- MANUAL ADDITIONS START -->

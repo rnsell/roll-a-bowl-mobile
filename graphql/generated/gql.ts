@@ -51,6 +51,19 @@ type Documents = {
     "\n  mutation CreateRecipe($input: CreateRecipeInput!) {\n    createRecipe(input: $input) {\n      id\n      name\n      slug\n      instructions\n      ingredientCount\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.CreateRecipeDocument,
     "\n  query SearchIngredients($input: SearchIngredientsInput!) {\n    searchIngredients(input: $input) {\n      ingredients {\n        id\n        name\n        isSystem\n        isCustom\n        category {\n          id\n          name\n          slug\n        }\n      }\n      totalCount\n    }\n  }\n": typeof types.SearchIngredientsDocument,
     "\n  query GetMeasurements($input: GetMeasurementsInput) {\n    measurements(input: $input) {\n      id\n      name\n      abbreviation\n      type\n      displayOrder\n      isExposed\n      isQualitative\n    }\n  }\n": typeof types.GetMeasurementsDocument,
+    "\n  query GetAisles {\n    aisles {\n      id\n      name\n      slug\n      sortOrder\n    }\n  }\n": typeof types.GetAislesDocument,
+    "\n  query GetShoppingList($input: GetShoppingListInput!) {\n    shoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetShoppingListDocument,
+    "\n  mutation GenerateShoppingList($input: GenerateShoppingListInput!) {\n    generateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": typeof types.GenerateShoppingListDocument,
+    "\n  mutation RegenerateShoppingList($input: RegenerateShoppingListInput!) {\n    regenerateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": typeof types.RegenerateShoppingListDocument,
+    "\n  mutation ToggleShoppingListItem($input: ToggleShoppingListItemInput!) {\n    toggleShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": typeof types.ToggleShoppingListItemDocument,
+    "\n  mutation AddShoppingListItem($input: AddShoppingListItemInput!) {\n    addShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": typeof types.AddShoppingListItemDocument,
+    "\n  mutation RemoveShoppingListItem($input: RemoveShoppingListItemInput!) {\n    removeShoppingListItem(input: $input)\n  }\n": typeof types.RemoveShoppingListItemDocument,
+    "\n  query GetFamilyShoppingList($input: GetFamilyShoppingListInput!) {\n    familyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetFamilyShoppingListDocument,
+    "\n  mutation GenerateFamilyShoppingList($input: GenerateFamilyShoppingListInput!) {\n    generateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": typeof types.GenerateFamilyShoppingListDocument,
+    "\n  mutation RegenerateFamilyShoppingList($input: RegenerateFamilyShoppingListInput!) {\n    regenerateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": typeof types.RegenerateFamilyShoppingListDocument,
+    "\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": typeof types.ToggleFamilyShoppingListItemDocument,
+    "\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": typeof types.AddFamilyShoppingListItemDocument,
+    "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n": typeof types.RemoveFamilyShoppingListItemDocument,
     "\n  query GetCurrentUserProfile {\n    me {\n      id\n      email\n      firstName\n      lastName\n      status\n    }\n  }\n": typeof types.GetCurrentUserProfileDocument,
     "\n  query GetMyFamilyGroup {\n    myFamilyGroup {\n      id\n      name\n      slug\n      memberCount\n      createdAt\n      members {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n      owner {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n    }\n  }\n": typeof types.GetMyFamilyGroupDocument,
 };
@@ -92,6 +105,19 @@ const documents: Documents = {
     "\n  mutation CreateRecipe($input: CreateRecipeInput!) {\n    createRecipe(input: $input) {\n      id\n      name\n      slug\n      instructions\n      ingredientCount\n      createdAt\n      updatedAt\n    }\n  }\n": types.CreateRecipeDocument,
     "\n  query SearchIngredients($input: SearchIngredientsInput!) {\n    searchIngredients(input: $input) {\n      ingredients {\n        id\n        name\n        isSystem\n        isCustom\n        category {\n          id\n          name\n          slug\n        }\n      }\n      totalCount\n    }\n  }\n": types.SearchIngredientsDocument,
     "\n  query GetMeasurements($input: GetMeasurementsInput) {\n    measurements(input: $input) {\n      id\n      name\n      abbreviation\n      type\n      displayOrder\n      isExposed\n      isQualitative\n    }\n  }\n": types.GetMeasurementsDocument,
+    "\n  query GetAisles {\n    aisles {\n      id\n      name\n      slug\n      sortOrder\n    }\n  }\n": types.GetAislesDocument,
+    "\n  query GetShoppingList($input: GetShoppingListInput!) {\n    shoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetShoppingListDocument,
+    "\n  mutation GenerateShoppingList($input: GenerateShoppingListInput!) {\n    generateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": types.GenerateShoppingListDocument,
+    "\n  mutation RegenerateShoppingList($input: RegenerateShoppingListInput!) {\n    regenerateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": types.RegenerateShoppingListDocument,
+    "\n  mutation ToggleShoppingListItem($input: ToggleShoppingListItemInput!) {\n    toggleShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": types.ToggleShoppingListItemDocument,
+    "\n  mutation AddShoppingListItem($input: AddShoppingListItemInput!) {\n    addShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": types.AddShoppingListItemDocument,
+    "\n  mutation RemoveShoppingListItem($input: RemoveShoppingListItemInput!) {\n    removeShoppingListItem(input: $input)\n  }\n": types.RemoveShoppingListItemDocument,
+    "\n  query GetFamilyShoppingList($input: GetFamilyShoppingListInput!) {\n    familyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetFamilyShoppingListDocument,
+    "\n  mutation GenerateFamilyShoppingList($input: GenerateFamilyShoppingListInput!) {\n    generateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": types.GenerateFamilyShoppingListDocument,
+    "\n  mutation RegenerateFamilyShoppingList($input: RegenerateFamilyShoppingListInput!) {\n    regenerateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n": types.RegenerateFamilyShoppingListDocument,
+    "\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": types.ToggleFamilyShoppingListItemDocument,
+    "\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": types.AddFamilyShoppingListItemDocument,
+    "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n": types.RemoveFamilyShoppingListItemDocument,
     "\n  query GetCurrentUserProfile {\n    me {\n      id\n      email\n      firstName\n      lastName\n      status\n    }\n  }\n": types.GetCurrentUserProfileDocument,
     "\n  query GetMyFamilyGroup {\n    myFamilyGroup {\n      id\n      name\n      slug\n      memberCount\n      createdAt\n      members {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n      owner {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n    }\n  }\n": types.GetMyFamilyGroupDocument,
 };
@@ -258,6 +284,58 @@ export function graphql(source: "\n  query SearchIngredients($input: SearchIngre
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetMeasurements($input: GetMeasurementsInput) {\n    measurements(input: $input) {\n      id\n      name\n      abbreviation\n      type\n      displayOrder\n      isExposed\n      isQualitative\n    }\n  }\n"): (typeof documents)["\n  query GetMeasurements($input: GetMeasurementsInput) {\n    measurements(input: $input) {\n      id\n      name\n      abbreviation\n      type\n      displayOrder\n      isExposed\n      isQualitative\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetAisles {\n    aisles {\n      id\n      name\n      slug\n      sortOrder\n    }\n  }\n"): (typeof documents)["\n  query GetAisles {\n    aisles {\n      id\n      name\n      slug\n      sortOrder\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetShoppingList($input: GetShoppingListInput!) {\n    shoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query GetShoppingList($input: GetShoppingListInput!) {\n    shoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation GenerateShoppingList($input: GenerateShoppingListInput!) {\n    generateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  mutation GenerateShoppingList($input: GenerateShoppingListInput!) {\n    generateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RegenerateShoppingList($input: RegenerateShoppingListInput!) {\n    regenerateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  mutation RegenerateShoppingList($input: RegenerateShoppingListInput!) {\n    regenerateShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ToggleShoppingListItem($input: ToggleShoppingListItemInput!) {\n    toggleShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n"): (typeof documents)["\n  mutation ToggleShoppingListItem($input: ToggleShoppingListItemInput!) {\n    toggleShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddShoppingListItem($input: AddShoppingListItemInput!) {\n    addShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n"): (typeof documents)["\n  mutation AddShoppingListItem($input: AddShoppingListItemInput!) {\n    addShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveShoppingListItem($input: RemoveShoppingListItemInput!) {\n    removeShoppingListItem(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveShoppingListItem($input: RemoveShoppingListItemInput!) {\n    removeShoppingListItem(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetFamilyShoppingList($input: GetFamilyShoppingListInput!) {\n    familyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query GetFamilyShoppingList($input: GetFamilyShoppingListInput!) {\n    familyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n      aisleGroups {\n        aisle {\n          id\n          name\n          slug\n          sortOrder\n        }\n        allChecked\n        items {\n          id\n          name\n          quantity\n          measurement {\n            id\n            name\n            abbreviation\n          }\n          source\n          isChecked\n          sortOrder\n        }\n      }\n      createdAt\n      updatedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation GenerateFamilyShoppingList($input: GenerateFamilyShoppingListInput!) {\n    generateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  mutation GenerateFamilyShoppingList($input: GenerateFamilyShoppingListInput!) {\n    generateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RegenerateFamilyShoppingList($input: RegenerateFamilyShoppingListInput!) {\n    regenerateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  mutation RegenerateFamilyShoppingList($input: RegenerateFamilyShoppingListInput!) {\n    regenerateFamilyShoppingList(input: $input) {\n      id\n      startDate\n      endDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n"): (typeof documents)["\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n"): (typeof documents)["\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
