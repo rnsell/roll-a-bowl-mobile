@@ -64,6 +64,9 @@ type Documents = {
     "\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": typeof types.ToggleFamilyShoppingListItemDocument,
     "\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": typeof types.AddFamilyShoppingListItemDocument,
     "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n": typeof types.RemoveFamilyShoppingListItemDocument,
+    "\n  query GetTermsStatus {\n    termsStatus {\n      termsRequiresAcceptance\n      termsCurrentVersion\n      termsAcceptedVersion\n      termsEffectiveDate\n      privacyRequiresAcceptance\n      privacyCurrentVersion\n      privacyAcceptedVersion\n      privacyEffectiveDate\n    }\n  }\n": typeof types.GetTermsStatusDocument,
+    "\n  query GetCurrentTerms($documentType: String!) {\n    currentTerms(documentType: $documentType) {\n      version\n      content\n      effectiveDate\n    }\n  }\n": typeof types.GetCurrentTermsDocument,
+    "\n  mutation AcceptTerms($documentType: String!, $version: String!) {\n    acceptTerms(documentType: $documentType, version: $version) {\n      id\n      version\n      acceptedAt\n    }\n  }\n": typeof types.AcceptTermsDocument,
     "\n  query GetCurrentUserProfile {\n    me {\n      id\n      email\n      firstName\n      lastName\n      status\n    }\n  }\n": typeof types.GetCurrentUserProfileDocument,
     "\n  query GetMyFamilyGroup {\n    myFamilyGroup {\n      id\n      name\n      slug\n      memberCount\n      createdAt\n      members {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n      owner {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n    }\n  }\n": typeof types.GetMyFamilyGroupDocument,
 };
@@ -118,6 +121,9 @@ const documents: Documents = {
     "\n  mutation ToggleFamilyShoppingListItem($input: ToggleFamilyShoppingListItemInput!) {\n    toggleFamilyShoppingListItem(input: $input) {\n      id\n      isChecked\n      checkedAt\n    }\n  }\n": types.ToggleFamilyShoppingListItemDocument,
     "\n  mutation AddFamilyShoppingListItem($input: AddFamilyShoppingListItemInput!) {\n    addFamilyShoppingListItem(input: $input) {\n      id\n      name\n      quantity\n      isChecked\n      source\n    }\n  }\n": types.AddFamilyShoppingListItemDocument,
     "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n": types.RemoveFamilyShoppingListItemDocument,
+    "\n  query GetTermsStatus {\n    termsStatus {\n      termsRequiresAcceptance\n      termsCurrentVersion\n      termsAcceptedVersion\n      termsEffectiveDate\n      privacyRequiresAcceptance\n      privacyCurrentVersion\n      privacyAcceptedVersion\n      privacyEffectiveDate\n    }\n  }\n": types.GetTermsStatusDocument,
+    "\n  query GetCurrentTerms($documentType: String!) {\n    currentTerms(documentType: $documentType) {\n      version\n      content\n      effectiveDate\n    }\n  }\n": types.GetCurrentTermsDocument,
+    "\n  mutation AcceptTerms($documentType: String!, $version: String!) {\n    acceptTerms(documentType: $documentType, version: $version) {\n      id\n      version\n      acceptedAt\n    }\n  }\n": types.AcceptTermsDocument,
     "\n  query GetCurrentUserProfile {\n    me {\n      id\n      email\n      firstName\n      lastName\n      status\n    }\n  }\n": types.GetCurrentUserProfileDocument,
     "\n  query GetMyFamilyGroup {\n    myFamilyGroup {\n      id\n      name\n      slug\n      memberCount\n      createdAt\n      members {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n      owner {\n        id\n        firstName\n        lastName\n        email\n        role\n        createdAt\n      }\n    }\n  }\n": types.GetMyFamilyGroupDocument,
 };
@@ -336,6 +342,18 @@ export function graphql(source: "\n  mutation AddFamilyShoppingListItem($input: 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n"): (typeof documents)["\n  mutation RemoveFamilyShoppingListItem($input: RemoveFamilyShoppingListItemInput!) {\n    removeFamilyShoppingListItem(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetTermsStatus {\n    termsStatus {\n      termsRequiresAcceptance\n      termsCurrentVersion\n      termsAcceptedVersion\n      termsEffectiveDate\n      privacyRequiresAcceptance\n      privacyCurrentVersion\n      privacyAcceptedVersion\n      privacyEffectiveDate\n    }\n  }\n"): (typeof documents)["\n  query GetTermsStatus {\n    termsStatus {\n      termsRequiresAcceptance\n      termsCurrentVersion\n      termsAcceptedVersion\n      termsEffectiveDate\n      privacyRequiresAcceptance\n      privacyCurrentVersion\n      privacyAcceptedVersion\n      privacyEffectiveDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetCurrentTerms($documentType: String!) {\n    currentTerms(documentType: $documentType) {\n      version\n      content\n      effectiveDate\n    }\n  }\n"): (typeof documents)["\n  query GetCurrentTerms($documentType: String!) {\n    currentTerms(documentType: $documentType) {\n      version\n      content\n      effectiveDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AcceptTerms($documentType: String!, $version: String!) {\n    acceptTerms(documentType: $documentType, version: $version) {\n      id\n      version\n      acceptedAt\n    }\n  }\n"): (typeof documents)["\n  mutation AcceptTerms($documentType: String!, $version: String!) {\n    acceptTerms(documentType: $documentType, version: $version) {\n      id\n      version\n      acceptedAt\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

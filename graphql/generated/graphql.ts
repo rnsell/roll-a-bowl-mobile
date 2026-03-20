@@ -138,6 +138,8 @@ export type AdminTermsVersion = {
   content: Scalars['String']['output'];
   /** Version creation timestamp */
   createdAt: Scalars['DateTime']['output'];
+  /** Document type: terms or privacy_policy */
+  documentType: Scalars['String']['output'];
   /** Effective date (YYYY-MM-DD) or null for unpublished/draft versions */
   effectiveDate?: Maybe<Scalars['String']['output']>;
   /** Terms version ID */
@@ -309,6 +311,8 @@ export type CreateRecipeInput = {
 export type CreateTermsVersionInput = {
   /** Markdown content of the terms */
   content: Scalars['String']['input'];
+  /** Document type: terms or privacy_policy (defaults to terms) */
+  documentType?: InputMaybe<Scalars['String']['input']>;
   /** Effective date (YYYY-MM-DD) or null for unpublished */
   effectiveDate?: InputMaybe<Scalars['String']['input']>;
   /** Version identifier in YYYY-MM-DD format (must be unique) */
@@ -652,7 +656,7 @@ export type MeasurementTypeEnum =
 export type Mutation = {
   __typename?: 'Mutation';
   acceptFamilyInvitation: FamilyGroupType;
-  /** Accept the current terms version. Creates an immutable acceptance record. */
+  /** Accept a document version. Creates an immutable acceptance record. */
   acceptTerms: TermsAcceptanceType;
   /** Add an ad hoc meal (free-text) to a specific meal slot. Multiple ad hoc meals can be added to the same slot. */
   addAdHocMeal: MealPlanEntryType;
@@ -667,11 +671,11 @@ export type Mutation = {
   addRecipeToMealPlan: MealPlanEntryType;
   /** Add a write-in item to a shopping list. */
   addShoppingListItem: ShoppingListItemType;
-  /** Create a new terms version. */
+  /** Create a new version for a document type. */
   adminCreateTermsVersion: AdminTermsVersion;
-  /** Delete a terms version. Only allowed if version has no user acceptances. */
+  /** Delete a version. Only allowed if no user acceptances exist. */
   adminDeleteTermsVersion: Scalars['Boolean']['output'];
-  /** Update an existing terms version. Only allowed if version has no user acceptances. */
+  /** Update a version. Only allowed if no user acceptances exist. */
   adminUpdateTermsVersion: AdminTermsVersion;
   cancelFamilyInvitation: Scalars['Boolean']['output'];
   /** Remove all entries (recipes and ad hoc meals) from a specific family meal slot. Returns count of entries removed. */
@@ -683,7 +687,7 @@ export type Mutation = {
   createFamilyGroup: FamilyGroupType;
   createFamilyRecipe: FamilyRecipeType;
   createRecipe: RecipeType;
-  /** Create a new terms version (admin). Version must be unique. */
+  /** Create a new terms version (admin). */
   createTermsVersion: TermsVersion;
   declineFamilyInvitation: Scalars['Boolean']['output'];
   /** Delete a custom ingredient (user-owned only) */
@@ -743,6 +747,7 @@ export type MutationAcceptFamilyInvitationArgs = {
 
 
 export type MutationAcceptTermsArgs = {
+  documentType?: Scalars['String']['input'];
   version: Scalars['String']['input'];
 };
 
@@ -788,11 +793,13 @@ export type MutationAdminCreateTermsVersionArgs = {
 
 
 export type MutationAdminDeleteTermsVersionArgs = {
+  documentType?: Scalars['String']['input'];
   version: Scalars['String']['input'];
 };
 
 
 export type MutationAdminUpdateTermsVersionArgs = {
+  documentType?: Scalars['String']['input'];
   input: UpdateTermsVersionInput;
   version: Scalars['String']['input'];
 };
@@ -1000,15 +1007,15 @@ export type Query = {
   adminRecipeDetail?: Maybe<AdminRecipeDetail>;
   /** Search users by email (partial match) or user ID (exact match). Returns paginated results. */
   adminSearchUsers: AdminUserSearchResult;
-  /** Get a specific terms version by version string. */
+  /** Get a specific version by version string and document type. */
   adminTermsVersion?: Maybe<AdminTermsVersion>;
-  /** Get all terms versions including unpublished. Returns versions ordered by effective date (unpublished first). */
+  /** Get all versions for a document type including unpublished. */
   adminTermsVersions: Array<AdminTermsVersion>;
   /** Get user profile with terms acceptance history. Returns null if user not found. */
   adminUserProfile?: Maybe<AdminUserProfile>;
   /** Get all aisles for the current tenant, ordered by sort order. */
   aisles: Array<AisleType>;
-  /** Get all terms versions (admin). Returns all versions ordered by effective date. */
+  /** Get all terms versions (admin). */
   allTermsVersions: Array<TermsVersion>;
   /** Check if the current user has access to a specific feature. Returns allowed: true/false. Throws error for unknown features. */
   checkAccess: AccessCheckResult;
@@ -1016,7 +1023,7 @@ export type Query = {
   connectedApps: Array<ConnectedApp>;
   /** Get statistics about connected MCP applications */
   connectedAppsStats: ConnectedAppsStats;
-  /** Get the current terms document. Returns null if no terms configured. */
+  /** Get the current document for a given type. Returns null if not configured. */
   currentTerms?: Maybe<TermsDocument>;
   familyGroupInvitations: Array<FamilyInvitationType>;
   /** Get all family meal plan entries for a specific date (includes both recipes and ad hoc meals with addedBy attribution) */
@@ -1057,7 +1064,7 @@ export type Query = {
   searchIngredients: IngredientSearchResult;
   /** Get shopping list for a date range. Returns null if none exists. */
   shoppingList?: Maybe<ShoppingListType>;
-  /** Check if the current user needs to accept terms. Returns acceptance status. */
+  /** Check if the current user needs to accept terms and/or privacy policy. */
   termsStatus: TermsStatusType;
   unifiedRecipes: Array<RecipeType>;
   user?: Maybe<UserProfile>;
@@ -1077,7 +1084,13 @@ export type QueryAdminSearchUsersArgs = {
 
 
 export type QueryAdminTermsVersionArgs = {
+  documentType?: Scalars['String']['input'];
   version: Scalars['String']['input'];
+};
+
+
+export type QueryAdminTermsVersionsArgs = {
+  documentType?: Scalars['String']['input'];
 };
 
 
@@ -1093,6 +1106,11 @@ export type QueryCheckAccessArgs = {
 
 export type QueryConnectedAppsArgs = {
   activeOnly?: Scalars['Boolean']['input'];
+};
+
+
+export type QueryCurrentTermsArgs = {
+  documentType?: Scalars['String']['input'];
 };
 
 
@@ -1364,9 +1382,11 @@ export type TermsAcceptanceType = {
   __typename?: 'TermsAcceptanceType';
   /** When the acceptance occurred */
   acceptedAt: Scalars['DateTime']['output'];
+  /** Document type (terms or privacy_policy) */
+  documentType: Scalars['String']['output'];
   /** Unique identifier */
   id: Scalars['ID']['output'];
-  /** Terms version that was accepted (YYYY-MM-DD) */
+  /** Document version that was accepted (YYYY-MM-DD) */
   version: Scalars['String']['output'];
 };
 
@@ -1381,17 +1401,25 @@ export type TermsDocument = {
   version: Scalars['String']['output'];
 };
 
-/** Status of the current user's terms acceptance */
+/** Combined status of the current user's terms and privacy policy acceptance */
 export type TermsStatusType = {
   __typename?: 'TermsStatusType';
-  /** Version the user has accepted (null if never accepted) */
-  acceptedVersion?: Maybe<Scalars['String']['output']>;
+  /** Privacy policy version the user has accepted (null if never accepted) */
+  privacyAcceptedVersion?: Maybe<Scalars['String']['output']>;
+  /** Current privacy policy version (null if no privacy policy configured) */
+  privacyCurrentVersion?: Maybe<Scalars['String']['output']>;
+  /** Effective date of current privacy policy (null if not configured) */
+  privacyEffectiveDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Whether the user needs to accept the privacy policy to proceed */
+  privacyRequiresAcceptance: Scalars['Boolean']['output'];
+  /** Terms version the user has accepted (null if never accepted) */
+  termsAcceptedVersion?: Maybe<Scalars['String']['output']>;
   /** Current terms version (null if no terms configured) */
-  currentVersion?: Maybe<Scalars['String']['output']>;
-  /** Effective date of current terms (null if no terms configured) */
-  effectiveDate?: Maybe<Scalars['DateTime']['output']>;
+  termsCurrentVersion?: Maybe<Scalars['String']['output']>;
+  /** Effective date of current terms (null if not configured) */
+  termsEffectiveDate?: Maybe<Scalars['DateTime']['output']>;
   /** Whether the user needs to accept terms to proceed */
-  requiresAcceptance: Scalars['Boolean']['output'];
+  termsRequiresAcceptance: Scalars['Boolean']['output'];
 };
 
 /** A terms of service version with its content and metadata */
@@ -1852,6 +1880,26 @@ export type RemoveFamilyShoppingListItemMutationVariables = Exact<{
 
 export type RemoveFamilyShoppingListItemMutation = { __typename?: 'Mutation', removeFamilyShoppingListItem: boolean };
 
+export type GetTermsStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTermsStatusQuery = { __typename?: 'Query', termsStatus: { __typename?: 'TermsStatusType', termsRequiresAcceptance: boolean, termsCurrentVersion?: string | null, termsAcceptedVersion?: string | null, termsEffectiveDate?: string | null, privacyRequiresAcceptance: boolean, privacyCurrentVersion?: string | null, privacyAcceptedVersion?: string | null, privacyEffectiveDate?: string | null } };
+
+export type GetCurrentTermsQueryVariables = Exact<{
+  documentType: Scalars['String']['input'];
+}>;
+
+
+export type GetCurrentTermsQuery = { __typename?: 'Query', currentTerms?: { __typename?: 'TermsDocument', version: string, content: string, effectiveDate: string } | null };
+
+export type AcceptTermsMutationVariables = Exact<{
+  documentType: Scalars['String']['input'];
+  version: Scalars['String']['input'];
+}>;
+
+
+export type AcceptTermsMutation = { __typename?: 'Mutation', acceptTerms: { __typename?: 'TermsAcceptanceType', id: string, version: string, acceptedAt: string } };
+
 export type GetCurrentUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1913,5 +1961,8 @@ export const RegenerateFamilyShoppingListDocument = {"kind":"Document","definiti
 export const ToggleFamilyShoppingListItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ToggleFamilyShoppingListItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ToggleFamilyShoppingListItemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"toggleFamilyShoppingListItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isChecked"}},{"kind":"Field","name":{"kind":"Name","value":"checkedAt"}}]}}]}}]} as unknown as DocumentNode<ToggleFamilyShoppingListItemMutation, ToggleFamilyShoppingListItemMutationVariables>;
 export const AddFamilyShoppingListItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddFamilyShoppingListItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AddFamilyShoppingListItemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addFamilyShoppingListItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"isChecked"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]}}]} as unknown as DocumentNode<AddFamilyShoppingListItemMutation, AddFamilyShoppingListItemMutationVariables>;
 export const RemoveFamilyShoppingListItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveFamilyShoppingListItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RemoveFamilyShoppingListItemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeFamilyShoppingListItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<RemoveFamilyShoppingListItemMutation, RemoveFamilyShoppingListItemMutationVariables>;
+export const GetTermsStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTermsStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"termsStatus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"termsRequiresAcceptance"}},{"kind":"Field","name":{"kind":"Name","value":"termsCurrentVersion"}},{"kind":"Field","name":{"kind":"Name","value":"termsAcceptedVersion"}},{"kind":"Field","name":{"kind":"Name","value":"termsEffectiveDate"}},{"kind":"Field","name":{"kind":"Name","value":"privacyRequiresAcceptance"}},{"kind":"Field","name":{"kind":"Name","value":"privacyCurrentVersion"}},{"kind":"Field","name":{"kind":"Name","value":"privacyAcceptedVersion"}},{"kind":"Field","name":{"kind":"Name","value":"privacyEffectiveDate"}}]}}]}}]} as unknown as DocumentNode<GetTermsStatusQuery, GetTermsStatusQueryVariables>;
+export const GetCurrentTermsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentTerms"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"documentType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentTerms"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"documentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"documentType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"effectiveDate"}}]}}]}}]} as unknown as DocumentNode<GetCurrentTermsQuery, GetCurrentTermsQueryVariables>;
+export const AcceptTermsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AcceptTerms"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"documentType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"version"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acceptTerms"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"documentType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"documentType"}}},{"kind":"Argument","name":{"kind":"Name","value":"version"},"value":{"kind":"Variable","name":{"kind":"Name","value":"version"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"acceptedAt"}}]}}]}}]} as unknown as DocumentNode<AcceptTermsMutation, AcceptTermsMutationVariables>;
 export const GetCurrentUserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentUserProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetCurrentUserProfileQuery, GetCurrentUserProfileQueryVariables>;
 export const GetMyFamilyGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMyFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myFamilyGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"memberCount"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<GetMyFamilyGroupQuery, GetMyFamilyGroupQueryVariables>;
