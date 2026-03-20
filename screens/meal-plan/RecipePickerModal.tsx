@@ -1,5 +1,5 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, TextInput } from 'react-native';
+import { ActivityIndicator, FlatList, Modal, Pressable, TextInput } from 'react-native';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Box, Caption, Icon, Label, Paragraph, Row, SafeAreaBox, useTheme } from '@/design-system';
@@ -140,14 +140,16 @@ export function RecipePickerModal({ isOpen, mode, onSelect, onClose }: RecipePic
             borderColor={colors.border}
           >
             <Icon name="search" size="lg" color={colors.textLight} />
-            <TextInput
-              value={searchText}
-              onChangeText={setSearchText}
-              placeholder="Search recipes..."
-              placeholderTextColor={colors.textLight}
-              autoFocus
-              style={[styles.searchInput, { color: colors.text, fontFamily: fonts.body }]}
-            />
+            <Box flex={1}>
+              <TextInput
+                value={searchText}
+                onChangeText={setSearchText}
+                placeholder="Search recipes..."
+                placeholderTextColor={colors.textLight}
+                autoFocus
+                style={{ fontSize: 14, padding: 0, color: colors.text, fontFamily: fonts.body }}
+              />
+            </Box>
           </Row>
         </Box>
 
@@ -166,11 +168,3 @@ export function RecipePickerModal({ isOpen, mode, onSelect, onClose }: RecipePic
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    padding: 0,
-  },
-});
